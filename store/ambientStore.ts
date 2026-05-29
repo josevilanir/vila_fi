@@ -3,6 +3,7 @@ import { create } from 'zustand'
 interface AmbientState {
   volumes: Record<string, number>
   setVolume: (id: string, volume: number) => void
+  setAllVolumes: (volumes: Record<string, number>) => void
   toggle: (id: string) => void
   isActive: (id: string) => boolean
   activeIds: () => string[]
@@ -15,6 +16,8 @@ export const useAmbientStore = create<AmbientState>((set, get) => ({
 
   setVolume: (id, volume) =>
     set((state) => ({ volumes: { ...state.volumes, [id]: volume } })),
+
+  setAllVolumes: (volumes) => set({ volumes }),
 
   toggle: (id) =>
     set((state) => {

@@ -12,4 +12,9 @@ export const SOUNDS: SoundDef[] = [
   { id: 'keyboard',   label: 'Teclado',      freesoundId: 361639, icon: '⌨️' }, // Keyboard typing loop — cabled_mess
   { id: 'cafe',       label: 'Cafeteria',    freesoundId: 394702, icon: '☕' }, // Café Atmo_loop — hannagreen
   { id: 'fireplace',  label: 'Lareira',      freesoundId:  44322, icon: '🔥' }, // Fireplace.WAV — inchadney
+  { id: 'forest',    label: 'Floresta',      freesoundId: 609255, icon: '🌲' }, // Forest ambience — klankbild
+  { id: 'waves',     label: 'Ondas do Mar',  freesoundId: 369722, icon: '🌊' }, // Ocean waves — straget
+  { id: 'train',     label: 'Trem',          freesoundId: 146434, icon: '🚂' }, // Train interior — yuval
+  { id: 'birds',     label: 'Pássaros',      freesoundId: 399468, icon: '🐦' }, // Morning birds — Laribum
+  { id: 'thunder',   label: 'Trovão',        freesoundId: 398047, icon: '⚡' }, // Thunder loop — klankbild
 ]
