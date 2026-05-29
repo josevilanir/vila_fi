@@ -12,6 +12,7 @@ interface AuthState {
   register: (email: string, password: string, name?: string) => Promise<void>
   logout: () => void
   restoreSession: () => void
+  setCustomBackground: (url: string | null) => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -57,6 +58,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     localStorage.removeItem(TOKEN_KEY)
     set({ user: null, subscription: null, token: null })
+  },
+
+  setCustomBackground: (url) => {
+    set((s) => s.user ? { user: { ...s.user, customBackgroundUrl: url } } : {})
   },
 
   restoreSession: async () => {

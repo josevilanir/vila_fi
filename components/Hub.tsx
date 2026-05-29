@@ -10,6 +10,7 @@ import { ShareButton } from '@/components/ShareButton/ShareButton'
 import { AuthModal } from '@/components/Auth/AuthModal'
 import { UserMenu } from '@/components/Auth/UserMenu'
 import { PresetsPanel } from '@/components/Presets/PresetsPanel'
+import { BackgroundUploader } from '@/components/CustomBackground/BackgroundUploader'
 import { useEnvironmentSync } from '@/hooks/useEnvironmentSync'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -17,6 +18,7 @@ export default function Hub() {
   const [timerVisible, setTimerVisible] = useState(false)
   const [authOpen, setAuthOpen] = useState(false)
   const [presetsOpen, setPresetsOpen] = useState(false)
+  const [bgOpen, setBgOpen] = useState(false)
   const { user, restoreSession } = useAuth()
 
   useEnvironmentSync()
@@ -55,6 +57,17 @@ export default function Hub() {
                   <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
                 </svg>
                 <span>Presets</span>
+              </button>
+              <button
+                onClick={() => setBgOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors backdrop-blur-sm bg-white/10 border-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+                <span>Background</span>
               </button>
               <UserMenu onPresetsClick={() => setPresetsOpen(true)} />
             </>
@@ -127,6 +140,10 @@ export default function Hub() {
 
       <AnimatePresence>
         {presetsOpen && <PresetsPanel onClose={() => setPresetsOpen(false)} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {bgOpen && <BackgroundUploader onClose={() => setBgOpen(false)} />}
       </AnimatePresence>
     </main>
   )

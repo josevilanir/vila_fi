@@ -7,14 +7,15 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  passwordHash String
-  name         String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  presets      Preset[]
-  subscription Subscription?
+  id                  String        @id @default(cuid())
+  email               String        @unique
+  passwordHash        String
+  name                String?
+  customBackgroundUrl String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  presets             Preset[]
+  subscription        Subscription?
 }
 
 model Subscription {

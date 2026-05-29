@@ -116,8 +116,8 @@ tasks/
 | 3    | Compartilhar ambiente via URL             | ✅ Concluída |
 | 4    | Autenticação + Presets salvos             | ✅ Concluída |
 | 5    | Monetização — Planos + Stripe             | ✅ Concluída |
-| 6    | Upload de background personalizado        | 🔜 Próxima   |
-| 7    | Widgets extras                            | ⬜ Pendente  |
+| 6    | Upload de background personalizado        | ✅ Concluída |
+| 7    | Widgets extras                            | 🔜 Próxima   |
 | 8    | Landing page + SEO                        | ⬜ Pendente  |
 
 ---
@@ -878,9 +878,9 @@ Configurar todas as variáveis em: Vercel Dashboard → Project → Settings →
 | ✅ 2 | Pomodoro Timer     | Alto           | Baixo   | Indireta      |
 | ✅ 3 | Share via URL      | Alto viral     | Baixo   | Indireta      |
 | ✅ 4 | Auth + Presets     | Médio          | Médio   | Pré-requisito |
-| 🔜 5 | Stripe + Planos    | Alto           | Médio   | **Direta**    |
-| ⬜ 6 | Upload background  | Alto percebido | Médio   | Via Premium   |
-| ⬜ 7 | Widgets extras     | Médio          | Baixo   | Via Premium   |
+| ✅ 5 | Stripe + Planos    | Alto           | Médio   | **Direta**    |
+| ✅ 6 | Upload background  | Alto percebido | Médio   | Via Premium   |
+| 🔜 7 | Widgets extras     | Médio          | Baixo   | Via Premium   |
 | ⬜ 8 | Landing page       | Alto           | Médio   | Aquisição     |
 
 ---
