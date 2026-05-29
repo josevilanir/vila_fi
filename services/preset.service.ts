@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { CreatePresetInput } from '@/lib/schemas/preset'
+import { canSaveMorePresets } from '@/lib/planFeatures'
 
 export class PresetError extends Error {
   constructor(
@@ -11,8 +12,6 @@ export class PresetError extends Error {
   }
 }
 
-const FREE_PRESET_LIMIT = 2
-
 export async function listPresets(userId: string) {
   return prisma.preset.findMany({
     where: { userId },
@@ -21,8 +20,11 @@ export async function listPresets(userId: string) {
 }
 
 export async function createPreset(userId: string, input: CreatePresetInput) {
-  const count = await prisma.preset.count({ where: { userId } })
-  if (count >= FREE_PRESET_LIMIT) {
+  const [count, subscription] = await Promise.all([
+    prisma.preset.count({ where: { userId } }),
+    prisma.subscription.findUnique({ where: { userId } }),
+  ])
+  if (!canSaveMorePresets(subscription, count)) {
     throw new PresetError('PRESET_LIMIT_REACHED', 'Limite de presets do plano gratuito atingido', 403)
   }
   return prisma.preset.create({ data: { ...input, userId } })

@@ -115,8 +115,8 @@ tasks/
 | 2    | Timer Pomodoro                            | ✅ Concluída |
 | 3    | Compartilhar ambiente via URL             | ✅ Concluída |
 | 4    | Autenticação + Presets salvos             | ✅ Concluída |
-| 5    | Monetização — Planos + Stripe             | 🔜 Próxima   |
-| 6    | Upload de background personalizado        | ⬜ Pendente  |
+| 5    | Monetização — Planos + Stripe             | ✅ Concluída |
+| 6    | Upload de background personalizado        | 🔜 Próxima   |
 | 7    | Widgets extras                            | ⬜ Pendente  |
 | 8    | Landing page + SEO                        | ⬜ Pendente  |
 

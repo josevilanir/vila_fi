@@ -5,9 +5,12 @@ import { motion } from 'framer-motion'
 import { usePresets } from '@/hooks/usePresets'
 import { useAmbientStore } from '@/store/ambientStore'
 import { useRadioStore } from '@/store/radioStore'
+import { useAuthStore } from '@/store/authStore'
+import { isPremium } from '@/lib/planFeatures'
 import { SOUNDS } from '@/data/sounds'
 import { RADIO_STATIONS } from '@/data/radios'
 import { Button } from '@/components/ui/Button'
+import { UpgradeBanner } from '@/components/Upgrade/UpgradeBanner'
 
 const FREE_LIMIT = 2
 
@@ -20,13 +23,15 @@ export function SavePresetModal({ onClose, presetCount }: Props) {
   const { savePreset } = usePresets()
   const volumes = useAmbientStore((s) => s.volumes)
   const stationId = useRadioStore((s) => s.stationId)
+  const subscription = useAuthStore((s) => s.subscription)
   const [name, setName] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const activeSounds = Object.keys(volumes)
   const station = RADIO_STATIONS.find((r) => r.id === stationId)
-  const atLimit = presetCount >= FREE_LIMIT
+  const premium = isPremium(subscription)
+  const atLimit = !premium && presetCount >= FREE_LIMIT
 
   async function handleSave() {
     if (!name.trim()) { setError('Dê um nome ao preset'); return }
@@ -82,34 +87,33 @@ export function SavePresetModal({ onClose, presetCount }: Props) {
           {station && <p className="text-xs text-white/40">📻 {station.label}</p>}
         </div>
 
-        {atLimit && (
-          <div className="rounded-xl bg-amber-500/10 border border-amber-400/20 p-3 mb-4">
-            <p className="text-xs text-amber-300/80">
-              Você atingiu o limite de {FREE_LIMIT} presets do plano gratuito. Em breve: plano Premium com presets ilimitados!
-            </p>
+        {atLimit ? (
+          <div className="mb-4">
+            <UpgradeBanner />
           </div>
+        ) : (
+          <>
+            <div className="flex flex-col gap-1.5 mb-4">
+              <label className="text-xs text-white/50">Nome do preset</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="ex: Foco noturno"
+                maxLength={50}
+                className="w-full rounded-lg bg-white/10 border border-white/10 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-white/30 focus:bg-white/15 transition-colors"
+              />
+            </div>
+            {error && <p className="text-xs text-red-400 mb-3">{error}</p>}
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              className="w-full justify-center py-2"
+            >
+              {saving ? 'Salvando…' : 'Salvar preset'}
+            </Button>
+          </>
         )}
-
-        <div className="flex flex-col gap-1.5 mb-4">
-          <label className="text-xs text-white/50">Nome do preset</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="ex: Foco noturno"
-            maxLength={50}
-            disabled={atLimit}
-            className="w-full rounded-lg bg-white/10 border border-white/10 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-white/30 focus:bg-white/15 transition-colors disabled:opacity-40"
-          />
-        </div>
-        {error && <p className="text-xs text-red-400 mb-3">{error}</p>}
-        <Button
-          onClick={handleSave}
-          disabled={saving || atLimit}
-          className="w-full justify-center py-2"
-        >
-          {saving ? 'Salvando…' : 'Salvar preset'}
-        </Button>
       </motion.div>
     </div>
   )

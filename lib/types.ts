@@ -6,6 +6,15 @@ export interface SafeUser {
   updatedAt: Date
 }
 
+export interface SafeSubscription {
+  id: string
+  plan: string
+  status: string
+  stripeCurrentPeriodEnd: Date | null
+  createdAt: Date
+  updatedAt: Date
+}
+
 export interface FrontendPreset {
   id: string
   name: string

@@ -1,10 +1,11 @@
 import { create } from 'zustand'
-import { SafeUser } from '@/lib/types'
+import { SafeUser, SafeSubscription } from '@/lib/types'
 
 const TOKEN_KEY = 'vilafi_token'
 
 interface AuthState {
   user: SafeUser | null
+  subscription: SafeSubscription | null
   token: string | null
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
@@ -13,8 +14,9 @@ interface AuthState {
   restoreSession: () => void
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   user: null,
+  subscription: null,
   token: null,
   isLoading: false,
 
@@ -54,7 +56,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   logout: () => {
     localStorage.removeItem(TOKEN_KEY)
-    set({ user: null, token: null })
+    set({ user: null, subscription: null, token: null })
   },
 
   restoreSession: async () => {
@@ -69,7 +71,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         localStorage.removeItem(TOKEN_KEY)
         return
       }
-      set({ token, user: json.data })
+      const { subscription, ...user } = json.data
+      set({ token, user, subscription: subscription ?? null })
     } catch {
       localStorage.removeItem(TOKEN_KEY)
     }
