@@ -39,6 +39,52 @@
 - [x] `app/page.tsx` — hub principal com painéis flutuantes
 - [x] Build sem erros de tipo (`npm run build` ✅)
 
+## RoadMap Fase 1 — Expansão do Catálogo ✅
+- [x] `data/sounds.ts` — 10 sons (+ forest, waves, train, birds, thunder)
+- [x] `data/radios.ts` — 7 estações (+ smooth-jazz, classical, synthwave, study-beats)
+- [x] `data/videoMappings.ts` — 8 regras (+ forest-day, beach-sunset, storm-night)
+- [x] `npm run build` sem erros ✅
+
+## RoadMap Fase 2 — Timer Pomodoro ✅
+- [x] `store/timerStore.ts` — Zustand com estado completo do timer
+- [x] `hooks/useTimer.ts` — setInterval + sino (Howler.js) ao completar ciclo
+- [x] `components/PomodoroTimer/TimerDisplay.tsx` — SVG ring progress + MM:SS
+- [x] `components/PomodoroTimer/TimerControls.tsx` — Play/Pause/Reset/Skip + indicadores
+- [x] `components/PomodoroTimer/TimerModeSelector.tsx` — abas Foco/Pausa Curta/Pausa Longa
+- [x] `components/PomodoroTimer/PomodoroTimer.tsx` — container com toggle no Hub
+- [x] `npm run build` sem erros ✅
+
+## RoadMap Fase 3 — Compartilhar via URL ✅
+- [x] `lib/shareUrl.ts` — serializeEnvironment + deserializeEnvironment (funções puras)
+- [x] `hooks/useEnvironmentSync.ts` — carrega estado da URL na montagem
+- [x] `components/ShareButton/ShareButton.tsx` — copia URL + feedback visual
+- [x] Hub integrado: ShareButton no header + useEnvironmentSync ativo
+- [x] `npm run build` sem erros ✅
+
+## RoadMap Fase 4 — Auth + Presets ✅
+
+## RoadMap Fase 5 — Monetização: Planos + Stripe ✅
+- [x] `prisma/schema.prisma` — model Subscription adicionado
+- [x] `npx prisma generate` — client regenerado
+- [x] `npm install stripe @stripe/stripe-js`
+- [x] `lib/stripe.ts` — getStripe() lazy singleton
+- [x] `lib/planFeatures.ts` — isPremium(), canSaveMorePresets()
+- [x] `lib/types.ts` — SafeSubscription adicionado
+- [x] `services/subscription.service.ts` — CRUD Stripe customer + subscription
+- [x] `services/preset.service.ts` — verifica plano via canSaveMorePresets()
+- [x] `app/api/v1/stripe/create-checkout/route.ts` — cria sessão Stripe Checkout
+- [x] `app/api/v1/stripe/webhook/route.ts` — processa eventos Stripe (dahlia API)
+- [x] `app/api/v1/stripe/portal/route.ts` — portal de gerenciamento
+- [x] `app/api/v1/auth/me/route.ts` — inclui subscription na resposta
+- [x] `store/authStore.ts` — subscription no estado global
+- [x] `components/Upgrade/UpgradeBanner.tsx` — banner de upgrade premium
+- [x] `components/Presets/SavePresetModal.tsx` — mostra UpgradeBanner no limite
+- [x] `components/Auth/UserMenu.tsx` — badge PRO + link portal/upgrade
+- [x] `npm run build` sem erros ✅
+> **PENDENTE:** developer criar migration `npx prisma migrate dev --name add_subscription` após configurar Neon DB
+
+## RoadMap Fases 6-8 — Upload, Widgets, Landing ⏳ (dependem Fase 5)
+
 ## Pendente (assets)
-- [ ] Adicionar vídeos em `public/videos/` (town-default.mp4, town-rain.mp4, cozy-indoor.mp4, cafe-day.mp4, rainy-cafe.mp4)
-- [ ] Adicionar SFX em `public/audio/sfx/` (rain.mp3, whitenoise.mp3, keyboard.mp3, cafe.mp3, fireplace.mp3)
+- [ ] Adicionar vídeos em `public/videos/` (town-default.mp4, town-rain.mp4, cozy-indoor.mp4, cafe-day.mp4, rainy-cafe.mp4, forest-day.mp4, beach-sunset.mp4, storm-night.mp4)
+- [ ] Adicionar SFX em `public/audio/sfx/` (rain.mp3, whitenoise.mp3, keyboard.mp3, cafe.mp3, fireplace.mp3, bell.mp3)
