@@ -79,7 +79,14 @@ async function resolvePreviewUrl(
         `[freesound] metadata ${res.status} for sound ${id}: ${body.slice(0, 200)}`,
       )
       return NextResponse.json(
-        { error: 'Freesound metadata error', upstreamStatus: res.status },
+        {
+          error: 'Freesound metadata error',
+          upstreamStatus: res.status,
+          upstreamBodyLen: body.length,
+          upstreamServer: res.headers.get('server'),
+          upstreamCfRay: res.headers.get('cf-ray'),
+          upstreamBody: body.slice(0, 120),
+        },
         { status: res.status === 404 ? 404 : 502 },
       )
     }
