@@ -2,6 +2,51 @@ import { NextResponse } from 'next/server'
 
 const API_BASE = 'https://freesound.org/apiv2'
 
+// Resilience knobs for talking to Freesound. The maintenance episode that
+// surfaced as upstream 502s is exactly what these guard against: a slow or
+// flaky Freesound no longer hangs the serverless function or drops the sound on
+// the first transient blip.
+const REQUEST_TIMEOUT_MS = 10_000
+const MAX_RETRIES = 2 // 3 attempts total
+const BACKOFF_BASE_MS = 300
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+// fetch wrapper with an explicit timeout + exponential backoff on transient
+// failures (network errors / 5xx). 4xx are returned as-is — retrying a 404 or
+// 401 is pointless. The last attempt's response (even a 5xx) is returned so the
+// caller can map it to a user-facing error.
+async function fetchWithRetry(
+  url: string,
+  init: RequestInit & { next?: { revalidate: number } } = {},
+): Promise<Response> {
+  let lastError: unknown
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+    try {
+      const res = await fetch(url, { ...init, signal: controller.signal })
+      if (res.status >= 500 && attempt < MAX_RETRIES) {
+        await delay(BACKOFF_BASE_MS * 2 ** attempt)
+        continue
+      }
+      return res
+    } catch (err) {
+      lastError = err
+      if (attempt < MAX_RETRIES) {
+        await delay(BACKOFF_BASE_MS * 2 ** attempt)
+        continue
+      }
+      throw err
+    } finally {
+      clearTimeout(timeout)
+    }
+  }
+
+  throw lastError
+}
+
 // This route runs server-side, so its egress IP (Vercel) is what reaches
 // Freesound — not the client's. Both the metadata lookup AND the audio bytes
 // are proxied here, because freesound.org and cdn.freesound.org share the same
@@ -36,7 +81,7 @@ export async function GET(
   // 2. Stream the audio bytes through our server, forwarding Range for seeking.
   const range = request.headers.get('range')
   try {
-    const upstream = await fetch(previewUrl, {
+    const upstream = await fetchWithRetry(previewUrl, {
       headers: range ? { Range: range } : undefined,
       cache: 'no-store',
     })
@@ -66,7 +111,7 @@ async function resolvePreviewUrl(
   apiKey: string,
 ): Promise<string | NextResponse> {
   try {
-    const res = await fetch(
+    const res = await fetchWithRetry(
       `${API_BASE}/sounds/${id}/?token=${apiKey}&fields=previews`,
       { next: { revalidate: 86400 } },
     )
