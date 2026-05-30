@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Howl } from 'howler'
 import { SOUNDS } from '@/data/sounds'
-import { fetchSoundPreviewUrl } from '@/lib/freesound'
+import { getSoundStreamUrl } from '@/lib/freesound'
 
 export type AudioEngineStatus = 'idle' | 'loading' | 'ready' | 'error'
 
@@ -22,26 +22,27 @@ async function initEngine(): Promise<void> {
   if (engineStatus !== 'idle') return
   notifyListeners('loading')
 
-  const apiKey = process.env.NEXT_PUBLIC_FREESOUND_API_KEY
-  if (!apiKey) {
-    console.warn('[AudioEngine] NEXT_PUBLIC_FREESOUND_API_KEY não configurada.')
-    notifyListeners('error')
-    return
-  }
-
   const results = await Promise.all(
-    SOUNDS.map(async (sound) => {
-      const url = await fetchSoundPreviewUrl(sound.freesoundId, apiKey)
-      return { id: sound.id, url }
-    }),
+    SOUNDS.map(
+      (sound) =>
+        new Promise<boolean>((resolve) => {
+          const howl = new Howl({
+            src: [getSoundStreamUrl(sound.freesoundId)],
+            format: ['mp3'],
+            loop: true,
+            volume: 0,
+            html5: true,
+            onload: () => {
+              howlMap[sound.id] = howl
+              resolve(true)
+            },
+            onloaderror: () => resolve(false),
+          })
+        }),
+    ),
   )
 
-  let allLoaded = true
-  results.forEach(({ id, url }) => {
-    if (!url) { allLoaded = false; return }
-    howlMap[id] = new Howl({ src: [url], loop: true, volume: 0, html5: true })
-  })
-
+  const allLoaded = results.every(Boolean)
   notifyListeners(allLoaded ? 'ready' : 'error')
 }
 

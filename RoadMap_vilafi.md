@@ -116,9 +116,7 @@ tasks/
 | 3    | Compartilhar ambiente via URL             | ✅ Concluída |
 | 4    | Autenticação + Presets salvos             | ✅ Concluída |
 | 5    | Monetização — Planos + Stripe             | ✅ Concluída |
-| 6    | Upload de background personalizado        | ✅ Concluída |
-| 7    | Widgets extras                            | 🔜 Próxima   |
-| 8    | Landing page + SEO                        | ⬜ Pendente  |
+| 6    | Landing page + SEO                        | ✅ Concluída |
 
 ---
 
@@ -525,8 +523,6 @@ PREMIUM (R$19/mês ou R$149/ano)
   - Tudo do Free
   - Presets ilimitados
   - Cenas exclusivas
-  - Upload de background personalizado (Fase 6)
-  - Widgets extras (Fase 7)
 ```
 
 ### 5.2 — Schema: Assinatura
@@ -657,153 +653,13 @@ Criar `components/Upgrade/UpgradeBanner.tsx`:
 
 ---
 
-## Fase 6 — Upload de Background Personalizado
-
-**Objetivo:** Feature Premium de alto valor percebido. Usuário sobe sua própria foto ou vídeo.
-
-**Estimativa:** 1–2 dias
-
-> **Pré-requisito:** Fase 5 concluída. Exclusivo para Premium.
-
-### 6.1 — Storage: Cloudflare R2
-
-R2 é S3-compatible e tem free tier generoso (10GB/mês). Usar o SDK AWS S3 (compatível).
-
-**Instalar:**
-
-```bash
-npm install @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
-```
-
-**Variáveis de ambiente:**
-
-```env
-R2_ACCOUNT_ID=...
-R2_ACCESS_KEY_ID=...
-R2_SECRET_ACCESS_KEY=...
-R2_BUCKET_NAME=vilafi-backgrounds
-R2_PUBLIC_URL=https://pub-xxx.r2.dev
-```
-
-### 6.2 — Flow de Upload (Presigned URL)
-
-**Nunca fazer upload de arquivo pelo servidor Next.js.** O arquivo vai direto do browser para o R2.
-
-Fluxo:
-
-1. `POST /api/v1/upload/presign` → API valida usuário Premium, valida tipo/tamanho, retorna `{ uploadUrl, publicUrl }`
-2. Frontend faz `PUT` direto para o R2 via `uploadUrl`
-3. `POST /api/v1/upload/confirm` → API salva `publicUrl` no campo `customBackgroundUrl` do `User`
-
-**Validações obrigatórias no servidor (nunca confiar no cliente):**
-
-- Usuário é Premium? → 403 se não
-- `contentType` aceito: `image/jpeg`, `image/png`, `image/webp`, `video/mp4`
-- Tamanho máximo: imagem 10MB, vídeo 50MB
-
-### 6.3 — Schema: Campo no User
-
-Adicionar ao model `User` no Prisma:
-
-```prisma
-customBackgroundUrl String?
-```
-
-Migration:
-
-```bash
-npx prisma migrate dev --name add_custom_background
-```
-
-### 6.4 — Integração no VideoBackground
-
-Em `hooks/useVideoReactor.ts`: se usuário tem `customBackgroundUrl` e modo custom está ativo, retornar essa URL como background ativo.
-
-Em `components/VideoBackground/VideoLayer.tsx`: diferenciar URL externa (`http`) de caminho local. Para imagens, renderizar `<img>` com `object-fit: cover` em vez de `<video>`.
-
-### 6.5 — UI de Upload
-
-Criar `components/CustomBackground/BackgroundUploader.tsx`:
-
-- Dropzone com fallback de `<input type="file">`
-- Preview antes do upload
-- Barra de progresso via `XMLHttpRequest` (não `fetch` — não expõe progresso nativo)
-- Botão de remover background customizado
-
-**Critério de aceite da Fase 6:**
-
-- [ ] Usuário Premium sobe imagem e ela aparece como background imediatamente
-- [ ] URL do background persiste entre sessões (salva no banco)
-- [ ] Usuário free recebe 403 na API ao tentar fazer presign
-- [ ] Tipos inválidos são rejeitados com mensagem clara
-- [ ] `npm run build` sem erros
-
----
-
-## Fase 7 — Widgets Extras (Premium)
-
-**Objetivo:** Aumentar valor percebido do Premium com widgets visuais no hub.
-
-**Estimativa:** 1–2 dias
-
-### 7.1 — Widget: Relógio Analógico
-
-Criar `components/Widgets/AnalogClock.tsx`:
-
-- SVG puro com ponteiros animados via `transform: rotate()`
-- `useEffect` + `setInterval` de 1 segundo
-- Sem dependências externas
-
-### 7.2 — Widget: Clima Atual
-
-Criar `hooks/useWeather.ts`:
-
-- API **Open-Meteo** (gratuita, sem API key): `https://api.open-meteo.com/v1/forecast`
-- Pede geolocalização com `navigator.geolocation.getCurrentPosition()`
-- Cache de 30 minutos no `sessionStorage`
-- **Integração:** se está chovendo na cidade do usuário e som de chuva não está ativo → exibir sugestão de ativar
-
-Criar `components/Widgets/WeatherWidget.tsx`.
-
-### 7.3 — Widget: Contador de Foco
-
-Criar `components/Widgets/FocusStats.tsx`:
-
-- Persiste em `localStorage` (sem backend)
-- Incrementa baseado nos ciclos Pomodoro completos (`timerStore`)
-- Reset automático à meia-noite
-
-### 7.4 — Sistema de Widgets
-
-Criar `store/widgetsStore.ts`:
-
-```typescript
-interface WidgetsState {
-  visible: { clock: boolean; weather: boolean; focusStats: boolean };
-  toggle: (widget: keyof WidgetsState["visible"]) => void;
-}
-```
-
-Criar `components/Widgets/WidgetsPanel.tsx` — menu de toggles para ativar/desativar cada widget.
-
-**Critério de aceite da Fase 7:**
-
-- [ ] Relógio atualiza em tempo real
-- [ ] Clima exibe temperatura e condição correta
-- [ ] Sugestão de chuva aparece quando chovendo e som desativado
-- [ ] Contador persiste ao recarregar
-- [ ] Widgets são Premium — usuário free vê lock
-- [ ] `npm run build` sem erros
-
----
-
-## Fase 8 — Landing Page + SEO
+## Fase 6 — Landing Page + SEO
 
 **Objetivo:** Página de marketing para aquisição e conversão.
 
 **Estimativa:** 1–2 dias
 
-### 8.1 — Rota `/`
+### 6.1 — Rota `/`
 
 Transformar a página raiz em landing page. Mover o hub para `/app`. Criar redirecionamento para `/app` após login.
 
@@ -815,7 +671,7 @@ Transformar a página raiz em landing page. Mover o hub para `/app`. Criar redir
 4. Planos — Free vs Premium com toggle mensal/anual
 5. Footer
 
-### 8.2 — SEO
+### 6.2 — SEO
 
 Configurar em `app/layout.tsx`:
 
@@ -835,12 +691,12 @@ export const metadata: Metadata = {
 
 Criar `app/sitemap.ts` e `app/robots.ts`.
 
-**Critério de aceite da Fase 8:**
+**Critério de aceite da Fase 6:**
 
-- [ ] Landing page renderiza sem erros
-- [ ] Hub acessível em `/app`
-- [ ] Metadados OpenGraph corretos (validar em opengraph.xyz)
-- [ ] `npm run build` sem erros
+- [x] Landing page renderiza sem erros
+- [x] Hub acessível em `/app`
+- [x] Metadados OpenGraph corretos (validar em opengraph.xyz)
+- [x] `npm run build` sem erros
 
 ---
 
@@ -879,9 +735,7 @@ Configurar todas as variáveis em: Vercel Dashboard → Project → Settings →
 | ✅ 3 | Share via URL      | Alto viral     | Baixo   | Indireta      |
 | ✅ 4 | Auth + Presets     | Médio          | Médio   | Pré-requisito |
 | ✅ 5 | Stripe + Planos    | Alto           | Médio   | **Direta**    |
-| ✅ 6 | Upload background  | Alto percebido | Médio   | Via Premium   |
-| 🔜 7 | Widgets extras     | Médio          | Baixo   | Via Premium   |
-| ⬜ 8 | Landing page       | Alto           | Médio   | Aquisição     |
+| ✅ 6 | Landing page       | Alto           | Médio   | Aquisição     |
 
 ---
 

@@ -14,8 +14,8 @@ export class AuthError extends Error {
   }
 }
 
-function toSafeUser(user: { id: string; email: string; name: string | null; customBackgroundUrl?: string | null; createdAt: Date; updatedAt: Date }): SafeUser {
-  return { id: user.id, email: user.email, name: user.name, customBackgroundUrl: user.customBackgroundUrl ?? null, createdAt: user.createdAt, updatedAt: user.updatedAt }
+function toSafeUser(user: { id: string; email: string; name: string | null; createdAt: Date; updatedAt: Date }): SafeUser {
+  return { id: user.id, email: user.email, name: user.name, createdAt: user.createdAt, updatedAt: user.updatedAt }
 }
 
 export async function registerUser(input: RegisterInput): Promise<{ token: string; user: SafeUser }> {

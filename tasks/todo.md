@@ -83,7 +83,19 @@
 - [x] `npm run build` sem erros ✅
 > **PENDENTE:** developer criar migration `npx prisma migrate dev --name add_subscription` após configurar Neon DB
 
-## RoadMap Fases 6-8 — Upload, Widgets, Landing ⏳ (dependem Fase 5)
+## RoadMap Fase 6 — Landing Page ✅
+- [x] `app/app/page.tsx` — hub movido para /app
+- [x] `app/app/layout.tsx` — layout com overflow-hidden para o hub
+- [x] `app/page.tsx` — landing page (LandingNav + HeroSection + FeaturesSection + PlansSection + LandingFooter)
+- [x] `components/Landing/LandingNav.tsx` — navbar sticky com efeito de scroll
+- [x] `components/Landing/HeroSection.tsx` — hero com CTA e preview do app
+- [x] `components/Landing/FeaturesSection.tsx` — 6 features com ícones e animações
+- [x] `components/Landing/PlansSection.tsx` — Free vs Premium com toggle mensal/anual
+- [x] `components/Landing/LandingFooter.tsx` — footer com links
+- [x] `app/layout.tsx` — metadata OpenGraph + Twitter Cards + keywords
+- [x] `app/sitemap.ts` — sitemap.xml gerado automaticamente
+- [x] `app/robots.ts` — robots.txt
+- [x] `npm run build` sem erros ✅
 
 ## Pendente (assets)
 - [ ] Adicionar vídeos em `public/videos/` (town-default.mp4, town-rain.mp4, cozy-indoor.mp4, cafe-day.mp4, rainy-cafe.mp4, forest-day.mp4, beach-sunset.mp4, storm-night.mp4)

@@ -11,7 +11,7 @@ model User {
   email               String        @unique
   passwordHash        String
   name                String?
-  customBackgroundUrl String?
+
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
   presets             Preset[]
