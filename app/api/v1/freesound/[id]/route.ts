@@ -26,7 +26,13 @@ async function fetchWithRetry(
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
     try {
-      const res = await fetch(url, { ...init, signal: controller.signal })
+      // Opt out of AbortController when using Next.js cache — passing a signal
+      // disables the Data Cache in Next.js 15, which defeats revalidate entirely.
+      const fetchInit = { ...init }
+      if (!fetchInit.next) {
+        fetchInit.signal = controller.signal
+      }
+      const res = await fetch(url, fetchInit)
       if (res.status >= 500 && attempt < MAX_RETRIES) {
         await delay(BACKOFF_BASE_MS * 2 ** attempt)
         continue
