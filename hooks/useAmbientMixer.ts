@@ -1,8 +1,11 @@
 'use client'
 
 import { useEffect } from 'react'
+import { SOUNDS } from '@/data/sounds'
 import { useAmbientStore } from '@/store/ambientStore'
 import { useAudioEngine } from './useAudioEngine'
+
+const freesoundIdMap = Object.fromEntries(SOUNDS.map((s) => [s.id, s.freesoundId]))
 
 export function useAmbientMixer() {
   const { volumes, toggle, setVolume, isActive, activeIds } = useAmbientStore()
@@ -12,7 +15,7 @@ export function useAmbientMixer() {
   useEffect(() => {
     const active = new Set(Object.keys(volumes))
 
-    active.forEach((id) => engine.play(id, volumes[id]))
+    active.forEach((id) => engine.play(id, freesoundIdMap[id], volumes[id]))
 
     // Stop any sound that was removed from the map
     // We rely on the fact that if id is not in volumes it should be silent
