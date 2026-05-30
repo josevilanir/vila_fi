@@ -72,21 +72,9 @@ async function resolvePreviewUrl(
     )
 
     if (!res.ok) {
-      // TEMP DIAGNOSTIC: surface upstream status to tell apart IP block (403),
-      // bad token (401) and rate limit (429). Revert once diagnosed.
-      const body = await res.text().catch(() => '')
-      console.error(
-        `[freesound] metadata ${res.status} for sound ${id}: ${body.slice(0, 200)}`,
-      )
+      console.error(`[freesound] metadata ${res.status} for sound ${id}`)
       return NextResponse.json(
-        {
-          error: 'Freesound metadata error',
-          upstreamStatus: res.status,
-          upstreamBodyLen: body.length,
-          upstreamServer: res.headers.get('server'),
-          upstreamCfRay: res.headers.get('cf-ray'),
-          upstreamBody: body.slice(0, 120),
-        },
+        { error: 'Freesound metadata error' },
         { status: res.status === 404 ? 404 : 502 },
       )
     }
