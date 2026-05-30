@@ -1,36 +1,11 @@
-const BASE_URL = 'https://freesound.org/apiv2'
-
-interface FreesoundPreviews {
-  'preview-hq-mp3': string
-  'preview-lq-mp3': string
-  'preview-hq-ogg': string
-  'preview-lq-ogg': string
-}
-
-interface FreesoundSoundResponse {
-  previews: FreesoundPreviews
-}
-
-export async function fetchSoundPreviewUrl(
-  soundId: number,
-  apiKey: string,
-): Promise<string | null> {
-  try {
-    const res = await fetch(
-      `${BASE_URL}/sounds/${soundId}/?token=${apiKey}&fields=previews`,
-    )
-    if (!res.ok) {
-      console.warn(`[Freesound] Failed to fetch sound ${soundId}: ${res.status}`)
-      return null
-    }
-    const data: FreesoundSoundResponse = await res.json()
-    return (
-      data.previews?.['preview-hq-mp3'] ??
-      data.previews?.['preview-lq-mp3'] ??
-      null
-    )
-  } catch (err) {
-    console.warn(`[Freesound] Network error for sound ${soundId}:`, err)
-    return null
-  }
+/**
+ * Same-origin proxy URL that streams a Freesound preview through our backend.
+ *
+ * The audio never loads from freesound.org directly — it flows through
+ * `/api/v1/freesound/[id]`, so the request reaches Freesound from the server's
+ * IP (Vercel) instead of the client's. Howler can't infer the format from this
+ * extension-less URL, so callers must pass `format: ['mp3']`.
+ */
+export function getSoundStreamUrl(freesoundId: number): string {
+  return `/api/v1/freesound/${freesoundId}`
 }
