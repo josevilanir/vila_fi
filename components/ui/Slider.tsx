@@ -15,7 +15,7 @@ export function Slider({ label, className, ...props }: Props) {
         max={1}
         step={0.01}
         className={cn(
-          'w-full h-1 rounded-full appearance-none cursor-pointer',
+          'w-full h-2 rounded-full appearance-none cursor-pointer',
           'bg-white/20 accent-white',
           className,
         )}

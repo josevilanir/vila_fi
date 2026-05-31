@@ -74,7 +74,7 @@ export function FeaturesSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section id="features" className="py-32 px-6">
+    <section id="features" className="py-20 sm:py-32 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
 
         {/* Section header — left-aligned, editorial */}
@@ -130,7 +130,7 @@ function FeatureRow({ feature, index }: { feature: typeof features[0]; index: nu
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 sm:flex sm:items-baseline sm:gap-8">
+      <div className="flex-1 min-w-0 sm:flex sm:items-baseline sm:gap-8 gap-1">
         <h3 className="text-base font-semibold text-[#f0eadd]/80 group-hover:text-[#f0eadd] transition-colors duration-200 sm:w-36 shrink-0">
           {feature.title}
         </h3>

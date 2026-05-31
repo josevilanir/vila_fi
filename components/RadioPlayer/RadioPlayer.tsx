@@ -16,7 +16,7 @@ export function RadioPlayer() {
   return (
     <>
       <YoutubePlayer containerId={iframeContainerId} />
-      <Card className="w-64">
+      <Card className="w-full sm:w-64">
         <h2 className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-3">
           Rádio Lo-Fi
         </h2>

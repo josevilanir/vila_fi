@@ -7,7 +7,7 @@ const titleWords = ['Seu', 'ambiente', 'de', 'foco', 'ideal.']
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center px-6 pt-20 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col justify-center px-4 sm:px-6 pt-20 overflow-hidden">
       {/* Atmospheric warm glow — bottom left, not centered */}
       <div className="absolute bottom-0 left-0 w-[560px] h-[560px] rounded-full bg-[#c9a96e]/6 blur-[140px] pointer-events-none" />
       <div className="absolute top-1/3 right-0 w-[320px] h-[320px] rounded-full bg-[#c9a96e]/4 blur-[100px] pointer-events-none" />
@@ -28,7 +28,7 @@ export function HeroSection() {
             Web Environment Hub
           </motion.p>
 
-          <h1 className="font-display text-[clamp(3.5rem,9vw,7rem)] font-bold leading-[0.95] tracking-tight text-[#f0eadd] mb-8">
+          <h1 className="font-display text-[clamp(2.5rem,9vw,7rem)] font-bold leading-[0.95] tracking-tight text-[#f0eadd] mb-8">
             {titleWords.map((word, wi) => (
               <motion.span
                 key={wi}

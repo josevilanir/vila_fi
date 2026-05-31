@@ -33,7 +33,7 @@ export function PlansSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section id="planos" className="py-32 px-6 relative">
+    <section id="planos" className="py-20 sm:py-32 px-4 sm:px-6 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#c9a96e]/[0.03] to-transparent pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative z-10">
@@ -80,7 +80,7 @@ export function PlansSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Free */}
           <motion.div
-            className="p-8 rounded-2xl border border-[#f0eadd]/[0.07] bg-[#f0eadd]/[0.02]"
+            className="p-6 sm:p-8 rounded-2xl border border-[#f0eadd]/[0.07] bg-[#f0eadd]/[0.02]"
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -110,7 +110,7 @@ export function PlansSection() {
 
           {/* Premium */}
           <motion.div
-            className="relative p-8 rounded-2xl border border-[#c9a96e]/25 bg-[#c9a96e]/[0.04] overflow-hidden"
+            className="relative p-6 sm:p-8 rounded-2xl border border-[#c9a96e]/25 bg-[#c9a96e]/[0.04] overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}

@@ -14,7 +14,7 @@ export function AmbientMixer() {
   const { volumes, isActive, toggle, setVolume, audioStatus } = useAmbientMixer()
 
   return (
-    <Card className="w-64">
+    <Card className="w-full sm:w-64">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-xs font-semibold uppercase tracking-widest text-white/40">
           Sons Ambientes
@@ -26,7 +26,7 @@ export function AmbientMixer() {
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 max-h-[45vh] sm:max-h-none overflow-y-auto">
         {SOUNDS.map((sound) => (
           <SoundCard
             key={sound.id}
