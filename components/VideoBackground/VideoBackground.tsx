@@ -9,7 +9,7 @@ export function VideoBackground() {
 
   return (
     <div className="fixed inset-0 z-0 bg-black overflow-hidden">
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence initial={false}>
         <VideoLayer key={currentVideo} src={currentVideo} />
       </AnimatePresence>
     </div>

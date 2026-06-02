@@ -12,9 +12,9 @@ const IMAGE_EXT = /\.(jpe?g|png|webp)(\?.*)?$/i
 const transition = { duration: 1.5, ease: 'easeInOut' as const }
 const motionProps = {
   className: 'absolute inset-0 w-full h-full object-cover',
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
+  initial: { opacity: 0, zIndex: 1 },
+  animate: { opacity: 1, zIndex: 1 },
+  exit: { opacity: 0, zIndex: 0 },
   transition,
 }
 
