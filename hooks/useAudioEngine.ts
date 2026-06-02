@@ -13,7 +13,7 @@ function getOrCreate(id: string, freesoundId: number): Howl {
       format: ['mp3'],
       loop: true,
       volume: 0,
-      html5: false, // Use Web Audio API instead of HTML5 streams
+      html5: true, // Use HTML5 Audio for streaming large files instantly
     })
   }
   return howlMap[id]
