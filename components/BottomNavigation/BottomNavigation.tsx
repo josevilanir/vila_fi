@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 
-export type MobileTab = 'radio' | 'sounds' | 'timer'
+export type MobileTab = 'radio' | 'timer'
 
 interface Props {
   active: MobileTab
@@ -16,17 +16,6 @@ const TABS: { id: MobileTab; label: string; icon: React.ReactNode }[] = [
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
-      </svg>
-    ),
-  },
-  {
-    id: 'sounds',
-    label: 'Sons',
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-        <path d="M15.54 8.46a5 5 0 010 7.07" />
-        <path d="M19.07 4.93a10 10 0 010 14.14" />
       </svg>
     ),
   },

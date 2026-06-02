@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { VideoBackground } from '@/components/VideoBackground/VideoBackground'
 import { RadioPlayer } from '@/components/RadioPlayer/RadioPlayer'
-import { AmbientMixer } from '@/components/AmbientMixer/AmbientMixer'
 import { PomodoroTimer } from '@/components/PomodoroTimer/PomodoroTimer'
+import { SoundHotspot } from '@/components/Hotspots/SoundHotspot'
 import { ShareButton } from '@/components/ShareButton/ShareButton'
 import { AuthModal } from '@/components/Auth/AuthModal'
 import { UserMenu } from '@/components/Auth/UserMenu'
@@ -114,6 +114,11 @@ export default function Hub() {
         </AnimatePresence>
       )}
 
+      {/* Sound hotspots overlay — positioned over the video */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <SoundHotspot soundId="rain" className="top-[15%] left-[62%] pointer-events-auto" />
+      </div>
+
       {/* Desktop: Panels at bottom corners */}
       {!isMobile && (
         <div className="relative z-10 flex-1 flex items-end justify-between px-8 pb-8 gap-6 pointer-events-none">
@@ -124,15 +129,6 @@ export default function Hub() {
             transition={{ delay: 0, duration: 0.5 }}
           >
             <RadioPlayer />
-          </motion.div>
-
-          <motion.div
-            className="pointer-events-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.5 }}
-          >
-            <AmbientMixer />
           </motion.div>
         </div>
       )}
@@ -153,9 +149,6 @@ export default function Hub() {
             >
               <div className={activeTab === 'radio' ? '' : 'hidden'}>
                 <RadioPlayer />
-              </div>
-              <div className={activeTab === 'sounds' ? '' : 'hidden'}>
-                <AmbientMixer />
               </div>
               <div className={activeTab === 'timer' ? '' : 'hidden'}>
                 <PomodoroTimer className="w-full" />
