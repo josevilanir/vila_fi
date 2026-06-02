@@ -11,6 +11,7 @@ import { AuthModal } from '@/components/Auth/AuthModal'
 import { UserMenu } from '@/components/Auth/UserMenu'
 import { PresetsPanel } from '@/components/Presets/PresetsPanel'
 import { BottomNavigation, type MobileTab } from '@/components/BottomNavigation/BottomNavigation'
+import { ThemeSwitch } from '@/components/ThemeSwitch/ThemeSwitch'
 import { useEnvironmentSync } from '@/hooks/useEnvironmentSync'
 import { useAuth } from '@/hooks/useAuth'
 import { useIsMobile } from '@/hooks/useIsMobile'
@@ -48,6 +49,7 @@ export default function Hub() {
         </div>
 
         <div className="flex items-center gap-2 mt-1">
+          <ThemeSwitch />
           <ShareButton />
 
           {user ? (
