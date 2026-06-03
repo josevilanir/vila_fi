@@ -12,7 +12,6 @@ export function HeroSection({ navigateTo, eqOn, setEqOn }: HeroSectionProps) {
       <div className="lp-headline">
         <h1>AMBIENTE<br />DE FOCO <span className="y">LO-FI</span></h1>
         <div className="lp-sub">
-          <span className="lp-tagpill">● SEM ANÚNCIOS</span>
           <p>Rádio lo-fi ao vivo, sons atmosféricos e vídeos que reagem ao seu mix. Monte o cenário perfeito de estudo e trabalho.</p>
         </div>
       </div>
@@ -24,20 +23,12 @@ export function HeroSection({ navigateTo, eqOn, setEqOn }: HeroSectionProps) {
           <div className="lp-arrow">↑</div>
         </div>
         <div className="lp-scene-img lp-ph lp-g-rain" data-label="cena reativa · cidade na chuva">
-          <span className="lp-react-tag">
-            <span className="lp-dot" />
-            VÍDEO REATIVO
-          </span>
         </div>
       </div>
 
       {/* Bottom left scene */}
       <div className="lp-scene-c">
         <div className="lp-scene-img lp-ph lp-g-cafe" data-label="cena reativa · cafeteria">
-          <span className="lp-react-tag">
-            <span className="lp-dot" />
-            ATIVA O CAFÉ
-          </span>
         </div>
       </div>
 
