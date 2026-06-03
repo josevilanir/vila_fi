@@ -67,7 +67,7 @@ export function ShareButton() {
           </motion.span>
         )}
       </AnimatePresence>
-      <span>{copied ? 'Copiado!' : 'Compartilhar'}</span>
+      <span className="hidden sm:inline">{copied ? 'Copiado!' : 'Compartilhar'}</span>
     </button>
   )
 }

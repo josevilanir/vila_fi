@@ -49,7 +49,9 @@ export default function Hub() {
         </div>
 
         <div className="flex items-center gap-2 mt-1">
-          <ThemeSwitch />
+          <div className="scale-75 sm:scale-100 origin-center">
+              <ThemeSwitch />
+            </div>
           <ShareButton />
 
           {user ? (

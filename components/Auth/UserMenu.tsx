@@ -72,7 +72,7 @@ export function UserMenu({ onPresetsClick }: Props) {
         <span className="w-5 h-5 rounded-full bg-indigo-500/60 flex items-center justify-center text-[10px] font-bold text-white">
           {initial}
         </span>
-        <span className="text-xs text-white/70 max-w-[80px] truncate">{user.name ?? user.email}</span>
+        <span className="hidden sm:inline text-xs text-white/70 max-w-[80px] truncate">{user.name ?? user.email}</span>
         {premium && (
           <span className="text-[9px] font-semibold bg-violet-500/30 text-violet-300 px-1.5 py-0.5 rounded-full border border-violet-400/30">
             PRO
