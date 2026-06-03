@@ -1,54 +1,51 @@
-'use client'
+import type { ViewId } from './ViFiLanding'
 
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+interface LandingNavProps {
+  currentView: ViewId
+  navigateTo: (viewId: ViewId) => void
+  isNight: boolean
+  toggleNight: () => void
+  counter: string
+}
 
-export function LandingNav() {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 30)
-    window.addEventListener('scroll', handler, { passive: true })
-    return () => window.removeEventListener('scroll', handler)
-  }, [])
-
+export function LandingNav({ currentView, navigateTo, isNight, toggleNight, counter }: LandingNavProps) {
   return (
-    <motion.nav
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? 'bg-[#0d0c0b]/90 backdrop-blur-md border-b border-[#f0eadd]/5'
-          : 'bg-transparent'
-      }`}
-      initial={{ opacity: 0, y: -12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-    >
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="font-display text-lg font-bold text-[#f0eadd] tracking-tight">
-          Vila Fi
-        </Link>
+    <header className="lp-topbar">
+      <button className="lp-brand" onClick={() => navigateTo('view-inicio')}>
+        <span className="lp-eq">
+          <i /><i /><i />
+        </span>
+        <span><b>vila</b> <span className="lp-fi">fi</span></span>
+      </button>
 
-        <div className="hidden sm:flex items-center gap-8 text-sm text-[#f0eadd]/40">
-          <a href="#features" className="hover:text-[#f0eadd]/80 transition-colors duration-200">Funcionalidades</a>
-          <a href="#planos" className="hover:text-[#f0eadd]/80 transition-colors duration-200">Planos</a>
-        </div>
+      <nav className="lp-notch">
+        {[
+          { id: 'view-inicio'   as ViewId, label: 'Início' },
+          { id: 'view-recursos' as ViewId, label: 'Recursos' },
+          { id: 'view-sons'     as ViewId, label: 'Sons' },
+          { id: 'view-planos'   as ViewId, label: 'Planos' },
+          { id: 'view-sobre'    as ViewId, label: 'Sobre' },
+        ].map(({ id, label }) => (
+          <a
+            key={id}
+            className={currentView === id ? 'active' : ''}
+            href={`#${id}`}
+            onClick={(e) => { e.preventDefault(); navigateTo(id) }}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
 
-        <div className="flex items-center gap-3">
-          <Link
-            href="/app"
-            className="hidden sm:block text-sm text-[#f0eadd]/40 hover:text-[#f0eadd]/70 transition-colors duration-200"
-          >
-            Entrar
-          </Link>
-          <Link
-            href="/app"
-            className="text-sm font-medium px-4 py-2 rounded-lg bg-[#c9a96e] hover:bg-[#d4b47a] text-[#0d0c0b] transition-colors duration-200"
-          >
-            Abrir App
-          </Link>
-        </div>
+      <div className="lp-topbar-right">
+        <span className="lp-nav-counter">{counter}</span>
+        <button className="lp-theme-btn" onClick={toggleNight} aria-label="Alternar tema">
+          {isNight ? '☀' : '☾'}
+        </button>
+        <a className="lp-join" href="/app">
+          Entrar no hub
+        </a>
       </div>
-    </motion.nav>
+    </header>
   )
 }

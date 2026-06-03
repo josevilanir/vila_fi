@@ -1,27 +1,40 @@
-import Link from 'next/link'
+import type { ViewId } from './ViFiLanding'
 
-export function LandingFooter() {
+interface LandingFooterProps {
+  navigateTo: (viewId: ViewId) => void
+}
+
+export function LandingFooter({ navigateTo }: LandingFooterProps) {
   return (
-    <footer className="border-t border-[#f0eadd]/5 py-12 px-6">
-      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div>
-          <Link href="/" className="font-display text-base font-bold text-[#f0eadd]/70">
-            Vila Fi
-          </Link>
-          <p className="text-xs text-[#f0eadd]/20 mt-1 leading-relaxed">
-            Web Environment Hub — foco e produtividade
-          </p>
+    <footer className="lp-footer">
+      <div className="lp-foot-top">
+        <div className="lp-foot-brand">VILA FI</div>
+        <div className="lp-foot-cols">
+          <div className="lp-foot-col">
+            <h5>Produto</h5>
+            <a href="#view-recursos" onClick={(e) => { e.preventDefault(); navigateTo('view-recursos') }}>Recursos</a>
+            <a href="#view-sons" onClick={(e) => { e.preventDefault(); navigateTo('view-sons') }}>Sons ambientes</a>
+            <a href="#view-planos" onClick={(e) => { e.preventDefault(); navigateTo('view-planos') }}>Planos</a>
+            <a href="#">Roadmap</a>
+          </div>
+          <div className="lp-foot-col">
+            <h5>Stack</h5>
+            <a href="#">Next.js 16 · React 19</a>
+            <a href="#">Howler.js · Zustand</a>
+            <a href="#">Prisma · PostgreSQL</a>
+            <a href="#">Stripe · Vercel</a>
+          </div>
+          <div className="lp-foot-col">
+            <h5>Comunidade</h5>
+            <a href="#">GitHub</a>
+            <a href="#">Discord</a>
+            <a href="#">Twitter / X</a>
+          </div>
         </div>
-
-        <nav className="flex items-center gap-7 text-xs text-[#f0eadd]/25">
-          <a href="#features" className="hover:text-[#f0eadd]/50 transition-colors">Funcionalidades</a>
-          <a href="#planos" className="hover:text-[#f0eadd]/50 transition-colors">Planos</a>
-          <Link href="/app" className="hover:text-[#f0eadd]/50 transition-colors">Abrir App</Link>
-        </nav>
-
-        <p className="text-xs text-[#f0eadd]/15">
-          © {new Date().getFullYear()} Vila Fi
-        </p>
+      </div>
+      <div className="lp-foot-bot">
+        <span>© 2026 Vila Fi · Seu ambiente de foco ideal.</span>
+        <span>Sem anúncios · Sem distrações</span>
       </div>
     </footer>
   )
