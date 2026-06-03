@@ -9,6 +9,21 @@ interface HeroSectionProps {
 export function HeroSection({ navigateTo, eqOn, setEqOn }: HeroSectionProps) {
   return (
     <div className="lp-hero">
+      <style>{`
+        .lp-scene-img { position: relative; }
+        .lp-img-day, .lp-img-night {
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          object-fit: cover;
+          transition: opacity 0.45s ease;
+          z-index: 0;
+        }
+        .lp-img-night { opacity: 0; }
+        .lp-img-day { opacity: 1; }
+        .landing-root.night .lp-img-day { opacity: 0; }
+        .landing-root.night .lp-img-night { opacity: 1; }
+      `}</style>
       <div className="lp-headline">
         <h1>AMBIENTE<br />DE FOCO <span className="y">LO-FI</span></h1>
         <div className="lp-sub">
@@ -22,13 +37,17 @@ export function HeroSection({ navigateTo, eqOn, setEqOn }: HeroSectionProps) {
           <div className="lp-stars">★<br />☆</div>
           <div className="lp-arrow">↑</div>
         </div>
-        <div className="lp-scene-img lp-ph lp-g-rain" data-label="cena reativa · cidade na chuva">
+        <div className="lp-scene-img lp-ph" data-label="cena reativa · cidade na chuva">
+          <img src="/images/lofi-street-day.png" alt="Cidade de dia" className="lp-img-day" />
+          <img src="/images/Lofi rain night.jpg" alt="Cidade na chuva" className="lp-img-night" />
         </div>
       </div>
 
       {/* Bottom left scene */}
       <div className="lp-scene-c">
-        <div className="lp-scene-img lp-ph lp-g-cafe" data-label="cena reativa · cafeteria">
+        <div className="lp-scene-img lp-ph" data-label="cena reativa · cafeteria">
+          <img src="/images/cafe-day.webp" alt="Cafeteria de dia" className="lp-img-day" />
+          <img src="/images/cafe-night.png" alt="Cafeteria à noite" className="lp-img-night" />
         </div>
       </div>
 

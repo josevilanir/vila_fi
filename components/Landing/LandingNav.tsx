@@ -1,4 +1,5 @@
 import type { ViewId } from './ViFiLanding'
+import { ThemeSwitch } from '../ThemeSwitch/ThemeSwitch'
 
 interface LandingNavProps {
   currentView: ViewId
@@ -39,9 +40,9 @@ export function LandingNav({ currentView, navigateTo, isNight, toggleNight, coun
 
       <div className="lp-topbar-right">
         <span className="lp-nav-counter">{counter}</span>
-        <button className="lp-theme-btn" onClick={toggleNight} aria-label="Alternar tema">
-          {isNight ? '☀' : '☾'}
-        </button>
+        <div style={{ transform: 'scale(0.65)', transformOrigin: 'center' }}>
+          <ThemeSwitch isDarkMode={isNight} toggleTheme={toggleNight} />
+        </div>
         <a className="lp-join" href="/app">
           Entrar no hub
         </a>

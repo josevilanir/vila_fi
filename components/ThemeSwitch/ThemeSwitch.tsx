@@ -4,8 +4,15 @@ import React from 'react';
 import styled from 'styled-components';
 import { useThemeStore } from '@/store/themeStore';
 
-export const ThemeSwitch = () => {
-  const { isDarkMode, toggleTheme } = useThemeStore();
+interface ThemeSwitchProps {
+  isDarkMode?: boolean;
+  toggleTheme?: () => void;
+}
+
+export const ThemeSwitch = ({ isDarkMode: propIsDarkMode, toggleTheme: propToggleTheme }: ThemeSwitchProps) => {
+  const store = useThemeStore();
+  const isDarkMode = propIsDarkMode ?? store.isDarkMode;
+  const toggleTheme = propToggleTheme ?? store.toggleTheme;
 
   return (
     <StyledWrapper>
