@@ -66,8 +66,11 @@ input[type="number"] {
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   transition: background-color .45s ease, color .45s ease;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .landing-root.night {
@@ -82,15 +85,19 @@ input[type="number"] {
 .landing-root a { color: inherit; text-decoration: none; }
 
 /* WRAP */
-.lp-wrap { max-width: 1280px; margin: 0 auto; padding: 14px; }
+.lp-wrap { max-width: 1280px; margin: 0 auto; padding: 14px; width: 100%; flex: 1; display: flex; flex-direction: column; }
 
 /* PANEL */
 .lp-panel {
   position: relative;
   background: var(--cream);
   border-radius: var(--rad);
-  padding: 0 clamp(20px, 3.4vw, 46px) clamp(24px, 3vw, 40px);
+  padding: 0 clamp(16px, 2.4vw, 36px) clamp(16px, 2.4vw, 36px);
   transition: background-color .45s ease;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* TOPBAR */
@@ -242,12 +249,15 @@ input[type="number"] {
 /* VIEWS */
 .lp-views {
   position: relative;
-  min-height: clamp(440px, 76vh, 820px);
-  margin-top: clamp(16px, 2.4vw, 28px);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(8px, 1.2vw, 16px);
+  overflow-y: auto;
 }
 
-.lp-view { display: none; }
-.lp-view.active { display: block; }
+.lp-view { display: none; flex: 1; }
+.lp-view.active { display: flex; flex-direction: column; }
 .lp-view.anim { animation: lp-viewIn .5s cubic-bezier(.22, .61, .36, 1); }
 
 @keyframes lp-viewIn {
@@ -262,17 +272,18 @@ input[type="number"] {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-auto-rows: minmax(0, auto);
-  gap: 16px;
+  gap: 12px;
   position: relative;
+  flex: 1;
 }
 
 /* HEADLINE */
-.lp-headline { grid-column: 1/9; align-self: start; }
+.lp-headline { grid-column: 1/9; align-self: center; }
 
 .lp-headline h1 {
   font-family: var(--font-anton), 'Anton', sans-serif;
   font-weight: 400;
-  font-size: clamp(54px, 9.6vw, 138px);
+  font-size: clamp(42px, 8vw, 100px);
   line-height: .86;
   letter-spacing: .005em;
   text-transform: uppercase;
@@ -288,7 +299,7 @@ input[type="number"] {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  margin-top: clamp(54px, 6.8vw, 92px);
+  margin-top: clamp(24px, 4.5vw, 64px);
   max-width: 540px;
 }
 
@@ -321,7 +332,7 @@ input[type="number"] {
   border-radius: 24px;
   overflow: hidden;
   display: flex;
-  min-height: 320px;
+  min-height: 200px;
   border: 1.5px solid var(--ink);
 }
 
@@ -415,7 +426,7 @@ input[type="number"] {
   position: relative;
   border-radius: 24px;
   overflow: hidden;
-  min-height: 240px;
+  min-height: 140px;
   border: 1.5px solid var(--ink);
 }
 
@@ -487,10 +498,10 @@ input[type="number"] {
   background: var(--cream-2);
   border-radius: 22px;
   border: 1.5px solid var(--ink);
-  padding: 22px 24px;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   justify-content: center;
   transition: background-color .45s ease;
 }
@@ -671,15 +682,15 @@ input[type="number"] {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: clamp(42px, 6vw, 66px);
+  margin-bottom: clamp(24px, 4vw, 42px);
 }
 
 .lp-sec-head h2 {
   font-family: var(--font-anton), 'Anton', sans-serif;
   font-weight: 400;
-  font-size: clamp(34px, 5.6vw, 74px);
+  font-size: clamp(28px, 4.5vw, 64px);
   line-height: .92;
   text-transform: uppercase;
   letter-spacing: .01em;
@@ -703,16 +714,16 @@ input[type="number"] {
 .lp-feat {
   border: 1.5px solid var(--ink);
   border-radius: 20px;
-  padding: 24px 22px 26px;
+  padding: 18px 18px 20px;
   background: var(--cream);
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-height: 190px;
+  gap: 10px;
+  min-height: 150px;
   transition: transform .2s, background .2s;
 }
 
-.lp-feat:hover { transform: translateY(-3px); }
+.lp-feat:hover { transform: translateY(-2px); }
 
 .lp-feat .lp-num {
   font-family: var(--font-space-mono), 'Space Mono', monospace;
@@ -789,10 +800,10 @@ input[type="number"] {
 .lp-plan {
   border: 1.5px solid var(--ink);
   border-radius: 22px;
-  padding: 30px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
   background: var(--cream);
 }
 
