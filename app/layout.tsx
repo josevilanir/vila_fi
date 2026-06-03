@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, DM_Sans } from 'next/font/google'
+import { Playfair_Display, DM_Sans, Anton, Archivo, Space_Mono } from 'next/font/google'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -11,6 +11,26 @@ const playfair = Playfair_Display({
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
+  display: 'swap',
+})
+
+const anton = Anton({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-anton',
+  display: 'swap',
+})
+
+const archivo = Archivo({
+  subsets: ['latin'],
+  variable: '--font-archivo',
+  display: 'swap',
+})
+
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-space-mono',
   display: 'swap',
 })
 
@@ -41,7 +61,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className="h-full">
-      <body suppressHydrationWarning className={`${playfair.variable} ${dmSans.variable} font-sans min-h-full bg-[#0d0c0b] text-[#f0eadd]`}>
+      <body suppressHydrationWarning className={`${playfair.variable} ${dmSans.variable} ${anton.variable} ${archivo.variable} ${spaceMono.variable} font-sans min-h-full`}>
         {children}
       </body>
     </html>
