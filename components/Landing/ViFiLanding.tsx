@@ -7,6 +7,7 @@ import { FeaturesSection } from './FeaturesSection'
 import { SoundsSection } from './SoundsSection'
 import { PlansSection } from './PlansSection'
 import { LandingFooter } from './LandingFooter'
+import { AboutSection } from './AboutSection'
 
 export type ViewId = 'view-inicio' | 'view-recursos' | 'view-sons' | 'view-planos' | 'view-sobre'
 
@@ -92,7 +93,8 @@ export function ViFiLanding() {
             </section>
 
             {/* ===== SOBRE / FOOTER ===== */}
-            <section className={viewClass('view-sobre')} id="view-sobre">
+            <section className={`${viewClass('view-sobre')} lp-block`} id="view-sobre">
+              <AboutSection />
               <LandingFooter navigateTo={navigateTo} />
             </section>
 
