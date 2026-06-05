@@ -11,7 +11,7 @@ declare global {
 }
 
 export function useRadioPlayer() {
-  const { stationId, isPlaying, setStation, togglePlay, nextStation, prevStation } = useRadioStore()
+  const { stationId, isPlaying, volume, setStation, togglePlay, nextStation, prevStation, setVolume } = useRadioStore()
   const playerRef   = useRef<YT.Player | null>(null)
   const isPlayingRef = useRef(isPlaying) // ref evita stale closure nos callbacks do YT
   const iframeContainerId = 'yt-player-container'
@@ -27,6 +27,7 @@ export function useRadioPlayer() {
       playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0 },
       events: {
         onReady: () => {
+          playerRef.current?.setVolume(volume * 100)
           // Usa ref para pegar o valor atual de isPlaying, não o do momento da criação
           if (isPlayingRef.current) playerRef.current?.playVideo()
         },
@@ -66,6 +67,13 @@ export function useRadioPlayer() {
     }
   }, [stationId]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Atualiza volume no player do YT
+  useEffect(() => {
+    if (playerRef.current && playerRef.current.setVolume) {
+      playerRef.current.setVolume(volume * 100)
+    }
+  }, [volume])
+
   // Play/pause chamado diretamente no handler do clique para respeitar
   // a autoplay policy do browser (precisa estar dentro do gesto do usuário)
   function handleTogglePlay() {
@@ -94,10 +102,12 @@ export function useRadioPlayer() {
   return { 
     stationId, 
     isPlaying, 
+    volume,
     setStation, 
     togglePlay: handleTogglePlay, 
     nextStation: handleNextStation, 
     prevStation: handlePrevStation, 
+    setVolume,
     iframeContainerId 
   }
 }

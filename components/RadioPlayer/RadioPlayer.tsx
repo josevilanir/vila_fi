@@ -9,7 +9,7 @@ import { StationSelector } from './StationSelector'
 import { RADIO_STATIONS } from '@/data/radios'
 
 export function RadioPlayer() {
-  const { stationId, isPlaying, setStation, togglePlay, nextStation, prevStation, iframeContainerId } =
+  const { stationId, isPlaying, volume, setStation, togglePlay, nextStation, prevStation, setVolume, iframeContainerId } =
     useRadioPlayer()
 
   const [isExpanded, setIsExpanded] = useState(false)
@@ -69,7 +69,27 @@ export function RadioPlayer() {
         </div>
 
         {isExpanded && (
-          <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/40 flex-shrink-0">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              </svg>
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={volume}
+                onChange={(e) => setVolume(parseFloat(e.target.value))}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full h-1 rounded-full accent-white cursor-pointer"
+                aria-label="Volume da rádio"
+              />
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60 flex-shrink-0">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M15.54 8.46a5 5 0 010 7.07" />
+              </svg>
+            </div>
             <StationSelector currentId={stationId} onSelect={setStation} />
           </div>
         )}
