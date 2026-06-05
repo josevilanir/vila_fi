@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function UserMenu({ onPresetsClick }: Props) {
-  const { user, subscription, token, logout } = useAuth()
+  const { user, subscription, logout } = useAuth()
   const [open, setOpen] = useState(false)
   const [portalLoading, setPortalLoading] = useState(false)
   const [checkoutLoading, setCheckoutLoading] = useState(false)
@@ -26,14 +26,13 @@ export function UserMenu({ onPresetsClick }: Props) {
   }, [])
 
   async function handleCheckout() {
-    if (!token) return
     setCheckoutLoading(true)
     setOpen(false)
     try {
       const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY ?? ''
       const res = await fetch('/api/v1/stripe/create-checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ priceId }),
       })
       const json = await res.json()
@@ -44,13 +43,9 @@ export function UserMenu({ onPresetsClick }: Props) {
   }
 
   async function handlePortal() {
-    if (!token) return
     setPortalLoading(true)
     try {
-      const res = await fetch('/api/v1/stripe/portal', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      const res = await fetch('/api/v1/stripe/portal', { method: 'POST' })
       const json = await res.json()
       if (json.data?.portalUrl) window.location.href = json.data.portalUrl
     } finally {

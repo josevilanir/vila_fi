@@ -1,23 +1,19 @@
 import { create } from 'zustand'
 import { SafeUser, SafeSubscription } from '@/lib/types'
 
-const TOKEN_KEY = 'vilafi_token'
-
 interface AuthState {
   user: SafeUser | null
   subscription: SafeSubscription | null
-  token: string | null
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
   register: (email: string, password: string, name?: string) => Promise<void>
-  logout: () => void
-  restoreSession: () => void
+  logout: () => Promise<void>
+  restoreSession: () => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   subscription: null,
-  token: null,
   isLoading: false,
 
   login: async (email, password) => {
@@ -30,8 +26,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       })
       const json = await res.json()
       if (json.error) throw new Error(json.error.message)
-      localStorage.setItem(TOKEN_KEY, json.data.token)
-      set({ token: json.data.token, user: json.data.user })
+      set({ user: json.data.user })
     } finally {
       set({ isLoading: false })
     }
@@ -47,34 +42,26 @@ export const useAuthStore = create<AuthState>((set) => ({
       })
       const json = await res.json()
       if (json.error) throw new Error(json.error.message)
-      localStorage.setItem(TOKEN_KEY, json.data.token)
-      set({ token: json.data.token, user: json.data.user })
+      set({ user: json.data.user })
     } finally {
       set({ isLoading: false })
     }
   },
 
-  logout: () => {
-    localStorage.removeItem(TOKEN_KEY)
-    set({ user: null, subscription: null, token: null })
+  logout: async () => {
+    await fetch('/api/v1/auth/logout', { method: 'POST' })
+    set({ user: null, subscription: null })
   },
 
   restoreSession: async () => {
-    const token = localStorage.getItem(TOKEN_KEY)
-    if (!token) return
     try {
-      const res = await fetch('/api/v1/auth/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      const res = await fetch('/api/v1/auth/me')
       const json = await res.json()
-      if (json.error) {
-        localStorage.removeItem(TOKEN_KEY)
-        return
-      }
+      if (json.error) return
       const { subscription, ...user } = json.data
-      set({ token, user, subscription: subscription ?? null })
+      set({ user, subscription: subscription ?? null })
     } catch {
-      localStorage.removeItem(TOKEN_KEY)
+      // Cookie invalid or expired — stay logged out
     }
   },
 }))

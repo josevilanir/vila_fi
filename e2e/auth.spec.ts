@@ -143,8 +143,8 @@ test.describe('Authentication flow', () => {
       await userAvatar.first().click()
       await page.getByRole('button', { name: /sair|logout/i }).click()
     } else {
-      // Fallback: clear token directly (simulates session expiry)
-      await page.evaluate(() => localStorage.removeItem('vilafi_token'))
+      // Fallback: clear session cookie (simulates session expiry)
+      await page.context().clearCookies()
       await page.reload()
       await page.waitForLoadState('networkidle')
     }

@@ -8,21 +8,19 @@ interface Props {
 }
 
 export function UpgradeBanner({ onClose }: Props) {
-  const token = useAuthStore((s) => s.token)
+  const user = useAuthStore((s) => s.user)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const priceId =
-    process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY ?? ''
+  const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY ?? ''
 
   async function handleUpgrade() {
-    if (!token) return
     setLoading(true)
     setError(null)
     try {
       const res = await fetch('/api/v1/stripe/create-checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ priceId }),
       })
       const json = await res.json()
@@ -52,12 +50,12 @@ export function UpgradeBanner({ onClose }: Props) {
           {error && <p className="text-xs text-red-400 mb-2">{error}</p>}
           <button
             onClick={handleUpgrade}
-            disabled={loading || !token}
+            disabled={loading || !user}
             className="w-full rounded-lg bg-violet-500 hover:bg-violet-400 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium py-2 transition-colors"
           >
             {loading ? 'Redirecionando…' : 'Assinar Premium — R$19/mês'}
           </button>
-          {!token && (
+          {!user && (
             <p className="text-xs text-white/40 mt-2 text-center">Faça login para assinar</p>
           )}
         </div>

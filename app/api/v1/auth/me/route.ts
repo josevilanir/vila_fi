@@ -1,29 +1,14 @@
-import { NextRequest } from 'next/server'
-import { getAuthUser } from '@/lib/getAuthUser'
+import { withAuth } from '@/lib/route-handler'
 import { getUserById } from '@/services/auth.service'
-import { getUserSubscription } from '@/services/subscription.service'
+import { getUserSubscription, toSafeSubscription } from '@/services/subscription.service'
 import { ok, err } from '@/lib/api-response'
 
-export async function GET(req: NextRequest) {
-  const payload = getAuthUser(req)
-  if (!payload) return err('UNAUTHORIZED', 'Não autorizado', 401)
-
-  const [user, subscription] = await Promise.all([
-    getUserById(payload.userId),
-    getUserSubscription(payload.userId),
+export const GET = withAuth(async (req, user) => {
+  const [safeUser, subscription] = await Promise.all([
+    getUserById(user.userId),
+    getUserSubscription(user.userId),
   ])
-  if (!user) return err('UNAUTHORIZED', 'Usuário não encontrado', 401)
+  if (!safeUser) return err('UNAUTHORIZED', 'Usuário não encontrado', 401)
 
-  const safeSubscription = subscription
-    ? {
-        id: subscription.id,
-        plan: subscription.plan,
-        status: subscription.status,
-        stripeCurrentPeriodEnd: subscription.stripeCurrentPeriodEnd,
-        createdAt: subscription.createdAt,
-        updatedAt: subscription.updatedAt,
-      }
-    : null
-
-  return ok({ ...user, subscription: safeSubscription })
-}
+  return ok({ ...safeUser, subscription: subscription ? toSafeSubscription(subscription) : null })
+})

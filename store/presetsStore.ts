@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import { FrontendPreset } from '@/lib/types'
 import { useAmbientStore } from './ambientStore'
 import { useRadioStore } from './radioStore'
-import { useAuthStore } from './authStore'
 
 interface PresetsState {
   presets: FrontendPreset[]
@@ -13,13 +12,7 @@ interface PresetsState {
   deletePreset: (id: string) => Promise<void>
 }
 
-function authHeaders() {
-  const token = useAuthStore.getState().token
-  return {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  }
-}
+const JSON_HEADERS = { 'Content-Type': 'application/json' }
 
 export const usePresetsStore = create<PresetsState>((set) => ({
   presets: [],
@@ -28,7 +21,7 @@ export const usePresetsStore = create<PresetsState>((set) => ({
   fetchPresets: async () => {
     set({ isLoading: true })
     try {
-      const res = await fetch('/api/v1/presets', { headers: authHeaders() })
+      const res = await fetch('/api/v1/presets')
       const json = await res.json()
       if (!json.error) set({ presets: json.data })
     } finally {
@@ -41,7 +34,7 @@ export const usePresetsStore = create<PresetsState>((set) => ({
     const radioId = useRadioStore.getState().stationId
     const res = await fetch('/api/v1/presets', {
       method: 'POST',
-      headers: authHeaders(),
+      headers: JSON_HEADERS,
       body: JSON.stringify({ name, sounds, radioId }),
     })
     const json = await res.json()
@@ -55,10 +48,7 @@ export const usePresetsStore = create<PresetsState>((set) => ({
   },
 
   deletePreset: async (id) => {
-    const res = await fetch(`/api/v1/presets/${id}`, {
-      method: 'DELETE',
-      headers: authHeaders(),
-    })
+    const res = await fetch(`/api/v1/presets/${id}`, { method: 'DELETE' })
     const json = await res.json()
     if (json.error) throw new Error(json.error.message)
     set((state) => ({ presets: state.presets.filter((p) => p.id !== id) }))

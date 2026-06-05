@@ -1,21 +1,15 @@
 import { NextRequest } from 'next/server'
-import { getAuthUser } from '@/lib/getAuthUser'
+import { withAuth } from '@/lib/route-handler'
 import { CreatePresetSchema } from '@/lib/schemas/preset'
-import { listPresets, createPreset, PresetError } from '@/services/preset.service'
+import { listPresets, createPreset } from '@/services/preset.service'
 import { ok, err } from '@/lib/api-response'
 
-export async function GET(req: NextRequest) {
-  const payload = getAuthUser(req)
-  if (!payload) return err('UNAUTHORIZED', 'Não autorizado', 401)
-
-  const presets = await listPresets(payload.userId)
+export const GET = withAuth(async (req, user) => {
+  const presets = await listPresets(user.userId)
   return ok(presets)
-}
+})
 
-export async function POST(req: NextRequest) {
-  const payload = getAuthUser(req)
-  if (!payload) return err('UNAUTHORIZED', 'Não autorizado', 401)
-
+export const POST = withAuth(async (req: NextRequest, user) => {
   const body = await req.json().catch(() => null)
   const parsed = CreatePresetSchema.safeParse(body)
   if (!parsed.success) {
@@ -23,12 +17,6 @@ export async function POST(req: NextRequest) {
     return err('VALIDATION_ERROR', message, 400)
   }
 
-  try {
-    const preset = await createPreset(payload.userId, parsed.data)
-    return ok(preset, 201)
-  } catch (e) {
-    if (e instanceof PresetError) return err(e.code, e.message, e.status)
-    console.error('[POST /presets]', e)
-    return err('INTERNAL_ERROR', 'Erro interno', 500)
-  }
-}
+  const preset = await createPreset(user.userId, parsed.data)
+  return ok(preset, 201)
+})

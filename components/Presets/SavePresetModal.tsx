@@ -6,13 +6,11 @@ import { usePresets } from '@/hooks/usePresets'
 import { useAmbientStore } from '@/store/ambientStore'
 import { useRadioStore } from '@/store/radioStore'
 import { useAuthStore } from '@/store/authStore'
-import { isPremium } from '@/lib/planFeatures'
+import { isPremium, FREE_PRESET_LIMIT } from '@/lib/planFeatures'
 import { SOUNDS } from '@/data/sounds'
 import { RADIO_STATIONS } from '@/data/radios'
 import { Button } from '@/components/ui/Button'
 import { UpgradeBanner } from '@/components/Upgrade/UpgradeBanner'
-
-const FREE_LIMIT = 2
 
 interface Props {
   onClose: () => void
@@ -31,7 +29,7 @@ export function SavePresetModal({ onClose, presetCount }: Props) {
   const activeSounds = Object.keys(volumes)
   const station = RADIO_STATIONS.find((r) => r.id === stationId)
   const premium = isPremium(subscription)
-  const atLimit = !premium && presetCount >= FREE_LIMIT
+  const atLimit = !premium && presetCount >= FREE_PRESET_LIMIT
 
   async function handleSave() {
     if (!name.trim()) { setError('Dê um nome ao preset'); return }

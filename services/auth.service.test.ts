@@ -45,7 +45,7 @@ describe('registerUser', () => {
     const result = await registerUser({ email: dbUser.email, password: 'secret123' })
     expect(typeof result.token).toBe('string')
     expect(result.user.email).toBe(dbUser.email)
-    expect((result.user as Record<string, unknown>).passwordHash).toBeUndefined()
+    expect((result.user as unknown as Record<string, unknown>).passwordHash).toBeUndefined()
   })
 })
 

@@ -49,12 +49,14 @@ describe('POST /api/v1/auth/register', () => {
     expect(res.status).toBe(400)
   })
 
-  it('returns 201 with token and user on success', async () => {
+  it('returns 201 with user (token moved to httpOnly cookie)', async () => {
     registerUserMock.mockResolvedValue({ token: 'tok', user: mockUser })
     const res = await POST(makeRequest({ email: 'new@b.com', password: 'secret123', name: 'Bob' }) as never)
     const json = await res.json()
     expect(res.status).toBe(201)
-    expect(json.data.token).toBe('tok')
+    expect(json.data.user.email).toBe('new@b.com')
+    // token must NOT appear in the response body
+    expect(json.data.token).toBeUndefined()
   })
 
   it('returns 409 when the e-mail is already taken', async () => {

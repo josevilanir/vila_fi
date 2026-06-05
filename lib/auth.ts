@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
+import { env } from './env'
 
-const SECRET = process.env.JWT_SECRET!
-const EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? '7d'
+const SECRET = env.JWT_SECRET
+const EXPIRES_IN = env.JWT_EXPIRES_IN
 
 export interface JWTPayload {
   userId: string

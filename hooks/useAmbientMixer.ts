@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { SOUNDS } from '@/data/sounds'
 import { useAmbientStore } from '@/store/ambientStore'
 import { useAudioEngine } from './useAudioEngine'
@@ -10,16 +10,22 @@ const freesoundIdMap = Object.fromEntries(SOUNDS.map((s) => [s.id, s.freesoundId
 export function useAmbientMixer() {
   const { volumes, toggle, setVolume, isActive, activeIds } = useAmbientStore()
   const engine = useAudioEngine()
+  const prevVolumesRef = useRef<Record<string, number>>({})
 
-  // Sync Howler state whenever volumes map changes
   useEffect(() => {
-    const active = new Set(Object.keys(volumes))
+    const prev = prevVolumesRef.current
 
-    active.forEach((id) => engine.play(id, freesoundIdMap[id], volumes[id]))
+    // Stop sounds that were removed from the map (e.g. via loadPreset)
+    for (const id of Object.keys(prev)) {
+      if (!(id in volumes)) engine.stop(id)
+    }
 
-    // Stop any sound that was removed from the map
-    // We rely on the fact that if id is not in volumes it should be silent
-    // This runs on every volumes change so removed ids are caught immediately
+    // Play or update volume for all currently active sounds
+    for (const [id, volume] of Object.entries(volumes)) {
+      engine.play(id, freesoundIdMap[id], volume)
+    }
+
+    prevVolumesRef.current = volumes
   }, [volumes]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleToggle(id: string) {

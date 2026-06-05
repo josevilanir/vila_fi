@@ -1,3 +1,5 @@
+export const FREE_PRESET_LIMIT = 2
+
 interface SubscriptionLike {
   plan: string
   status: string
@@ -17,5 +19,5 @@ export function canSaveMorePresets(
   currentCount: number,
 ): boolean {
   if (isPremium(subscription)) return true
-  return currentCount < 2
+  return currentCount < FREE_PRESET_LIMIT
 }

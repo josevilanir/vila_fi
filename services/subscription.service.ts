@@ -1,14 +1,23 @@
 import { prisma } from '@/lib/prisma'
 import { getStripe } from '@/lib/stripe'
 import { isPremium } from '@/lib/planFeatures'
+import { AppError } from '@/lib/errors'
+import { SafeSubscription } from '@/lib/types'
+import type { Subscription } from '@prisma/client'
 
-export class SubscriptionError extends Error {
-  constructor(
-    public code: string,
-    message: string,
-    public status: number,
-  ) {
-    super(message)
+export { AppError as SubscriptionError }
+
+// Statuses that retain premium access while payment resolves
+const PREMIUM_STATUSES = new Set(['active', 'trialing', 'past_due'])
+
+export function toSafeSubscription(sub: Subscription): SafeSubscription {
+  return {
+    id: sub.id,
+    plan: sub.plan,
+    status: sub.status,
+    stripeCurrentPeriodEnd: sub.stripeCurrentPeriodEnd,
+    createdAt: sub.createdAt,
+    updatedAt: sub.updatedAt,
   }
 }
 
@@ -57,14 +66,16 @@ export async function activateSubscription(
   })
 }
 
-export async function renewSubscription(
-  stripeSubscriptionId: string,
-  periodEnd: Date,
-): Promise<void> {
-  await prisma.subscription.update({
+export async function renewSubscription(stripeSubscriptionId: string, periodEnd: Date): Promise<void> {
+  const result = await prisma.subscription.updateMany({
     where: { stripeSubscriptionId },
     data: { stripeCurrentPeriodEnd: periodEnd, status: 'active' },
   })
+  // If checkout.session.completed hasn't fired yet, record won't exist.
+  // Throw so Stripe retries after it does.
+  if (result.count === 0) {
+    throw new AppError('SUBSCRIPTION_NOT_FOUND', 'Subscription not found; will be retried', 404)
+  }
 }
 
 export async function cancelSubscription(stripeSubscriptionId: string): Promise<void> {
@@ -78,7 +89,9 @@ export async function updateSubscriptionStatus(
   stripeSubscriptionId: string,
   status: string,
 ): Promise<void> {
-  const plan = status === 'active' ? 'premium' : 'free'
+  // trialing and past_due retain premium while payment resolves;
+  // only canceled/unpaid/incomplete_expired revoke access immediately.
+  const plan = PREMIUM_STATUSES.has(status) ? 'premium' : 'free'
   await prisma.subscription.update({
     where: { stripeSubscriptionId },
     data: { status, plan },

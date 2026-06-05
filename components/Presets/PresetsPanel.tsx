@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { usePresets } from '@/hooks/usePresets'
+import { FREE_PRESET_LIMIT } from '@/lib/planFeatures'
 import { PresetList } from './PresetList'
 import { SavePresetModal } from './SavePresetModal'
 import { FrontendPreset } from '@/lib/types'
@@ -40,7 +41,7 @@ export function PresetsPanel({ onClose }: Props) {
           <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/8">
             <div>
               <h2 className="text-sm font-semibold text-white/80">Meus Presets</h2>
-              <p className="text-xs text-white/30">{presets.length}/2 presets</p>
+              <p className="text-xs text-white/30">{presets.length}/{FREE_PRESET_LIMIT} presets</p>
             </div>
             <button
               onClick={onClose}

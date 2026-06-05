@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { getStripe } from '@/lib/stripe'
+import { prisma } from '@/lib/prisma'
+import { env } from '@/lib/env'
 import {
   activateSubscription,
   renewSubscription,
@@ -23,10 +25,22 @@ export async function POST(req: NextRequest) {
 
   let event: Stripe.Event
   try {
-    event = getStripe().webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET!)
+    event = getStripe().webhooks.constructEvent(rawBody, sig, env.STRIPE_WEBHOOK_SECRET)
   } catch (e) {
     console.error('[webhook] signature verification failed', e)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+  }
+
+  // Idempotency: deduplicate by event.id (Stripe delivers at-least-once)
+  try {
+    await prisma.stripeEvent.create({ data: { id: event.id, type: event.type } })
+  } catch (e: unknown) {
+    const prismaError = e as { code?: string }
+    if (prismaError?.code === 'P2002') {
+      // Already processed — return 200 so Stripe stops retrying
+      return NextResponse.json({ received: true })
+    }
+    throw e
   }
 
   try {

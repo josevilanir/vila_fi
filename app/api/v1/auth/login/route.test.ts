@@ -48,13 +48,14 @@ describe('POST /api/v1/auth/login', () => {
     expect(res.status).toBe(400)
   })
 
-  it('returns 200 with token and user on valid credentials', async () => {
+  it('returns 200 with user (token moved to httpOnly cookie)', async () => {
     loginUserMock.mockResolvedValue({ token: 'tok', user: mockUser })
     const res = await POST(makeRequest({ email: 'a@b.com', password: 'secret123' }) as never)
     const json = await res.json()
     expect(res.status).toBe(200)
-    expect(json.data.token).toBe('tok')
     expect(json.data.user.email).toBe('a@b.com')
+    // token must NOT appear in the response body
+    expect(json.data.token).toBeUndefined()
   })
 
   it('returns the service error code and status when loginUser throws AuthError', async () => {
