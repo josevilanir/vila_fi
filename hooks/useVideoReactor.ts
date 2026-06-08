@@ -17,5 +17,9 @@ export function useVideoReactor(): string {
     return isDarkMode ? 'town-night.mp4' : 'town-default.mp4'
   }
 
+  if (match.video === 'town-rain.mp4' && isDarkMode) {
+    return 'town-rain-night.mp4'
+  }
+
   return match.video
 }
