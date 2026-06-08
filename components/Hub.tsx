@@ -6,6 +6,7 @@ import { VideoBackground } from '@/components/VideoBackground/VideoBackground'
 import { RadioPlayer } from '@/components/RadioPlayer/RadioPlayer'
 import { PomodoroTimer } from '@/components/PomodoroTimer/PomodoroTimer'
 import { SoundHotspot } from '@/components/Hotspots/SoundHotspot'
+import { NavigationHotspot } from '@/components/Hotspots/NavigationHotspot'
 import { ShareButton } from '@/components/ShareButton/ShareButton'
 import { AuthModal } from '@/components/Auth/AuthModal'
 import { UserMenu } from '@/components/Auth/UserMenu'
@@ -15,7 +16,7 @@ import { ThemeSwitch } from '@/components/ThemeSwitch/ThemeSwitch'
 import { useEnvironmentSync } from '@/hooks/useEnvironmentSync'
 import { useAuth } from '@/hooks/useAuth'
 import { useIsMobile } from '@/hooks/useIsMobile'
-import { useVideoReactor } from '@/hooks/useVideoReactor'
+import { useSceneStore } from '@/store/sceneStore'
 
 export default function Hub() {
   const [timerVisible, setTimerVisible] = useState(false)
@@ -24,7 +25,7 @@ export default function Hub() {
   const [activeTab, setActiveTab] = useState<MobileTab>('radio')
   const { user, restoreSession } = useAuth()
   const isMobile = useIsMobile()
-  const activeVideo = useVideoReactor()
+  const { currentScene, setScene } = useSceneStore()
 
   useEnvironmentSync()
 
@@ -45,9 +46,32 @@ export default function Hub() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white/90">Vila Fi</h1>
-          <p className="hidden sm:block text-sm text-white/40">Seu ambiente de foco</p>
+        <div className="flex items-center gap-3">
+          <AnimatePresence>
+            {currentScene !== 'town' && (
+              <motion.button
+                key="back-btn"
+                onClick={() => setScene('town')}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.2 }}
+                aria-label="Voltar para a rua"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium
+                  transition-colors backdrop-blur-sm bg-white/10 border-white/15 text-white/70
+                  hover:bg-white/20 hover:text-white"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+                <span className="hidden sm:inline">Voltar</span>
+              </motion.button>
+            )}
+          </AnimatePresence>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white/90">Vila Fi</h1>
+            <p className="hidden sm:block text-sm text-white/40">Seu ambiente de foco</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 mt-1">
@@ -120,13 +144,21 @@ export default function Hub() {
         </AnimatePresence>
       )}
 
-      {/* Sound hotspots overlay — positioned over the video */}
+      {/* Hotspots overlay */}
       <div className="absolute inset-0 z-10 pointer-events-none">
-        {activeVideo.startsWith('town') && (
-          <SoundHotspot soundId="rain" className="top-[15%] left-[62%] pointer-events-auto" />
+        {currentScene === 'town' && (
+          <>
+            <SoundHotspot soundId="rain" className="top-[15%] left-[62%] pointer-events-auto" />
+            <NavigationHotspot
+              targetScene="fireplace"
+              icon="🏠"
+              label="Entrar na lareira"
+              className="bottom-[25%] left-[10%] pointer-events-auto"
+            />
+          </>
         )}
-        {(activeVideo.startsWith('town') || activeVideo.startsWith('firePlace')) && (
-          <SoundHotspot soundId="fireplace" icon="🏠" className="bottom-[25%] left-[10%] pointer-events-auto" />
+        {currentScene === 'fireplace' && (
+          <SoundHotspot soundId="fireplace" className="bottom-[30%] left-1/2 -translate-x-1/2 pointer-events-auto" />
         )}
       </div>
 

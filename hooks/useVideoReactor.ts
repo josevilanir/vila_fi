@@ -3,10 +3,16 @@
 import { useAmbientStore } from '@/store/ambientStore'
 import { VIDEO_RULES } from '@/data/videoMappings'
 import { useThemeStore } from '@/store/themeStore'
+import { useSceneStore } from '@/store/sceneStore'
 
 export function useVideoReactor(): string {
   const volumes = useAmbientStore((s) => s.volumes)
   const isDarkMode = useThemeStore((s) => s.isDarkMode)
+  const currentScene = useSceneStore((s) => s.currentScene)
+
+  if (currentScene === 'fireplace') {
+    return isDarkMode ? 'firePlace-night.mp4' : 'firePlace-day.mp4'
+  }
 
   const active = new Set(Object.keys(volumes))
   const match = VIDEO_RULES
@@ -19,10 +25,6 @@ export function useVideoReactor(): string {
 
   if (match.video === 'town-rain.mp4' && isDarkMode) {
     return 'town-rain-night.mp4'
-  }
-
-  if (match.video === 'firePlace-day.mp4' && isDarkMode) {
-    return 'firePlace-night.mp4'
   }
 
   return match.video
