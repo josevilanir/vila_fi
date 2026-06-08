@@ -2,6 +2,7 @@
 
 import { Howl } from 'howler'
 import { getSoundStreamUrl } from '@/lib/freesound'
+import { SOUNDS } from '@/data/sounds'
 
 // Module-level singleton — survives re-renders and StrictMode double-mount
 const howlMap: Record<string, Howl> = {}
@@ -20,10 +21,16 @@ function getOrCreate(id: string, freesoundId: number): Howl {
 }
 
 export function useAudioEngine() {
+  function getGainMultiplier(id: string) {
+    const sound = SOUNDS.find(s => s.id === id)
+    return sound?.baseGain ?? 1
+  }
+
   function play(id: string, freesoundId: number, volume: number) {
     const howl = getOrCreate(id, freesoundId)
-    // Aplica curva exponencial (x²) para percepção de volume mais natural
-    howl.volume(Math.pow(volume, 2))
+    const gain = getGainMultiplier(id)
+    // Aplica curva exponencial (x²) e o multiplicador de ganho base
+    howl.volume(Math.pow(volume, 2) * gain)
     if (!howl.playing()) howl.play()
   }
 
@@ -35,8 +42,9 @@ export function useAudioEngine() {
   }
 
   function setVolume(id: string, volume: number) {
-    // Aplica curva exponencial (x²) para percepção de volume mais natural
-    howlMap[id]?.volume(Math.pow(volume, 2))
+    const gain = getGainMultiplier(id)
+    // Aplica curva exponencial (x²) e o multiplicador de ganho base
+    howlMap[id]?.volume(Math.pow(volume, 2) * gain)
   }
 
   return { status: 'ready' as const, play, stop, setVolume }

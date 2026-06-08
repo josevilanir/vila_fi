@@ -3,6 +3,7 @@ export interface SoundDef {
   label: string
   freesoundId: number
   icon: string
+  baseGain?: number
 }
 
 // IDs curados do Freesound (freesound.org) — todos CC licenciados
@@ -11,7 +12,7 @@ export const SOUNDS: SoundDef[] = [
   { id: 'whitenoise', label: 'Ruído Branco', freesoundId: 147300, icon: '🌊' }, // Room White Noise — Littleboot
   { id: 'keyboard',   label: 'Teclado',      freesoundId: 361639, icon: '⌨️' }, // Keyboard typing loop — cabled_mess
   { id: 'cafe',       label: 'Cafeteria',    freesoundId: 394702, icon: '☕' }, // Café Atmo_loop — hannagreen
-  { id: 'fireplace',  label: 'Lareira',      freesoundId:  44322, icon: '🔥' }, // Fireplace.WAV — inchadney
+  { id: 'fireplace',  label: 'Lareira',      freesoundId:  44322, icon: '🔥', baseGain: 3.0 }, // Fireplace.WAV — inchadney
   { id: 'forest',    label: 'Floresta',      freesoundId: 609255, icon: '🌲' }, // Forest ambience — klankbild
   { id: 'waves',     label: 'Ondas do Mar',  freesoundId: 369722, icon: '🌊' }, // Ocean waves — straget
   { id: 'train',     label: 'Trem',          freesoundId: 146434, icon: '🚂' }, // Train interior — yuval
