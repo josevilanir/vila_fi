@@ -8,9 +8,10 @@ import { SOUNDS } from '@/data/sounds'
 interface Props {
   soundId: string
   className?: string
+  icon?: string
 }
 
-export function SoundHotspot({ soundId, className = '' }: Props) {
+export function SoundHotspot({ soundId, className = '', icon }: Props) {
   const [open, setOpen] = useState(false)
   const { isActive, toggle, setVolume, volumes } = useAmbientMixer()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -46,7 +47,7 @@ export function SoundHotspot({ soundId, className = '' }: Props) {
               : 'bg-white/5 border-white/10 text-white/30 hover:bg-white/15 hover:border-white/25 hover:text-white/70'
           }`}
       >
-        <span className="text-base leading-none select-none">{sound?.icon}</span>
+        <span className="text-base leading-none select-none">{icon ?? sound?.icon}</span>
 
         {/* Active pulse indicator */}
         {active && (

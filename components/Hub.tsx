@@ -15,6 +15,7 @@ import { ThemeSwitch } from '@/components/ThemeSwitch/ThemeSwitch'
 import { useEnvironmentSync } from '@/hooks/useEnvironmentSync'
 import { useAuth } from '@/hooks/useAuth'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { useVideoReactor } from '@/hooks/useVideoReactor'
 
 export default function Hub() {
   const [timerVisible, setTimerVisible] = useState(false)
@@ -23,6 +24,7 @@ export default function Hub() {
   const [activeTab, setActiveTab] = useState<MobileTab>('radio')
   const { user, restoreSession } = useAuth()
   const isMobile = useIsMobile()
+  const activeVideo = useVideoReactor()
 
   useEnvironmentSync()
 
@@ -120,7 +122,12 @@ export default function Hub() {
 
       {/* Sound hotspots overlay — positioned over the video */}
       <div className="absolute inset-0 z-10 pointer-events-none">
-        <SoundHotspot soundId="rain" className="top-[15%] left-[62%] pointer-events-auto" />
+        {activeVideo.startsWith('town') && (
+          <SoundHotspot soundId="rain" className="top-[15%] left-[62%] pointer-events-auto" />
+        )}
+        {(activeVideo.startsWith('town') || activeVideo.startsWith('firePlace')) && (
+          <SoundHotspot soundId="fireplace" icon="🏠" className="bottom-[25%] left-[10%] pointer-events-auto" />
+        )}
       </div>
 
       {/* Desktop: Panels at bottom corners */}
