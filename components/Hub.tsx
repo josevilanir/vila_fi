@@ -143,9 +143,9 @@ export default function Hub() {
               targetScene="town"
               icon="🚪"
               label="Sair para a rua"
-              className="top-[35%] right-[20%] pointer-events-auto"
+              className="top-[35%] left-[20%] pointer-events-auto"
             />
-            <SoundHotspot soundId="fireplace" className="bottom-[30%] left-1/2 -translate-x-1/2 pointer-events-auto" />
+            <SoundHotspot soundId="fireplace" className="bottom-[30%] left-[70%] pointer-events-auto" />
           </>
         )}
       </div>
