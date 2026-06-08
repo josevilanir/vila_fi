@@ -132,7 +132,7 @@ export default function Hub() {
               targetScene="fireplace"
               icon="🏠"
               label="Entrar na lareira"
-              className="bottom-[25%] left-[10%] pointer-events-auto"
+              className="bottom-[35%] left-[25%] pointer-events-auto"
             />
           </>
         )}
