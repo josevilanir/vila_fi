@@ -47,27 +47,6 @@ export default function Hub() {
         transition={{ duration: 0.6 }}
       >
         <div className="flex items-center gap-3">
-          <AnimatePresence>
-            {currentScene !== 'town' && (
-              <motion.button
-                key="back-btn"
-                onClick={() => setScene('town')}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -8 }}
-                transition={{ duration: 0.2 }}
-                aria-label="Voltar para a rua"
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium
-                  transition-colors backdrop-blur-sm bg-white/10 border-white/15 text-white/70
-                  hover:bg-white/20 hover:text-white"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="15 18 9 12 15 6" />
-                </svg>
-                <span className="hidden sm:inline">Voltar</span>
-              </motion.button>
-            )}
-          </AnimatePresence>
           <div>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white/90">Vila Fi</h1>
             <p className="hidden sm:block text-sm text-white/40">Seu ambiente de foco</p>
@@ -158,7 +137,16 @@ export default function Hub() {
           </>
         )}
         {currentScene === 'fireplace' && (
-          <SoundHotspot soundId="fireplace" className="bottom-[30%] left-1/2 -translate-x-1/2 pointer-events-auto" />
+          <>
+            {/* Botão de voltar posicionado na "janela" ou porta da cena (ajuste o top/left/right conforme o vídeo) */}
+            <NavigationHotspot
+              targetScene="town"
+              icon="🚪"
+              label="Sair para a rua"
+              className="top-[35%] right-[20%] pointer-events-auto"
+            />
+            <SoundHotspot soundId="fireplace" className="bottom-[30%] left-1/2 -translate-x-1/2 pointer-events-auto" />
+          </>
         )}
       </div>
 
