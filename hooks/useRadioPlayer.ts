@@ -27,7 +27,8 @@ export function useRadioPlayer() {
       playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0 },
       events: {
         onReady: () => {
-          playerRef.current?.setVolume(volume * 100)
+          // Aplica curva exponencial (x²) ao volume do YouTube (0 a 100)
+          playerRef.current?.setVolume(Math.pow(volume, 2) * 100)
           // Usa ref para pegar o valor atual de isPlaying, não o do momento da criação
           if (isPlayingRef.current) playerRef.current?.playVideo()
         },
@@ -70,7 +71,8 @@ export function useRadioPlayer() {
   // Atualiza volume no player do YT
   useEffect(() => {
     if (playerRef.current && playerRef.current.setVolume) {
-      playerRef.current.setVolume(volume * 100)
+      // Aplica curva exponencial (x²) ao volume do YouTube
+      playerRef.current.setVolume(Math.pow(volume, 2) * 100)
     }
   }, [volume])
 

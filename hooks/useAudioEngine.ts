@@ -22,7 +22,8 @@ function getOrCreate(id: string, freesoundId: number): Howl {
 export function useAudioEngine() {
   function play(id: string, freesoundId: number, volume: number) {
     const howl = getOrCreate(id, freesoundId)
-    howl.volume(volume)
+    // Aplica curva exponencial (x²) para percepção de volume mais natural
+    howl.volume(Math.pow(volume, 2))
     if (!howl.playing()) howl.play()
   }
 
@@ -34,7 +35,8 @@ export function useAudioEngine() {
   }
 
   function setVolume(id: string, volume: number) {
-    howlMap[id]?.volume(volume)
+    // Aplica curva exponencial (x²) para percepção de volume mais natural
+    howlMap[id]?.volume(Math.pow(volume, 2))
   }
 
   return { status: 'ready' as const, play, stop, setVolume }
